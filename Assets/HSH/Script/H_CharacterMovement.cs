@@ -10,6 +10,7 @@ public class H_CharacterMovement : MonoBehaviour
 
     [Header("Camera Reference")]
     public Transform cameraTransform; // 카메라 Transform (카메라의 부모 오브젝트)
+    private H_CamController cameraController;
 
     [Header("Ground Check")]
     public Transform groundCheck;
@@ -32,6 +33,24 @@ public class H_CharacterMovement : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+
+        // 카메라 자동 찾기 및 연결
+        if (cameraTransform == null)
+        {
+            H_CamController camera = FindObjectOfType<H_CamController>();
+            if (camera != null)
+            {
+                cameraTransform = camera.transform;
+                cameraController = camera;
+                // 카메라에게 이 플레이어를 타겟으로 설정
+                camera.SetTarget(this.transform);
+            }
+        }
+        else
+        {
+            // 수동으로 할당된 카메라가 있다면 컨트롤러 참조 가져오기
+            cameraController = cameraTransform.GetComponent<H_CamController>();
+        }
 
         // Ground Check가 없으면 자동 생성
         if (groundCheck == null)
@@ -174,5 +193,27 @@ public class H_CharacterMovement : MonoBehaviour
     public void SetCameraTransform(Transform camera)
     {
         cameraTransform = camera;
+        cameraController = camera.GetComponent<H_CamController>();
+    }
+
+    public H_CamController GetCameraController()
+    {
+        return cameraController;
+    }
+
+    public void SetCameraDistance(float distance)
+    {
+        if (cameraController != null)
+        {
+            cameraController.SetDistance(distance);
+        }
+    }
+
+    public void SetCameraSensitivity(float sensitivity)
+    {
+        if (cameraController != null)
+        {
+            cameraController.SetSensitivity(sensitivity);
+        }
     }
 }

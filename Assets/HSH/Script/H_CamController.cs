@@ -39,6 +39,18 @@ public class H_CamController : MonoBehaviour
         currentY = angles.x;
 
         desiredDistance = distance;
+
+        // 플레이어 자동 찾기 및 타겟 설정
+        if (target == null)
+        {
+            H_CharacterMovement player = FindObjectOfType<H_CharacterMovement>();
+            if (player != null)
+            {
+                target = player.transform;
+                // 플레이어에게도 카메라 참조 설정
+                player.SetCameraTransform(this.transform);
+            }
+        }
     }
 
     void LateUpdate()
@@ -105,6 +117,13 @@ public class H_CamController : MonoBehaviour
     public void SetTarget(Transform newTarget)
     {
         target = newTarget;
+
+        // 타겟이 플레이어라면 카메라 참조도 설정
+        H_CharacterMovement player = target.GetComponent<H_CharacterMovement>();
+        if (player != null)
+        {
+            player.SetCameraTransform(this.transform);
+        }
     }
 
     public void SetDistance(float newDistance)
