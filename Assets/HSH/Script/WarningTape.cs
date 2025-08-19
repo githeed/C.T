@@ -156,21 +156,21 @@ public class WarningTape : MonoBehaviour
         UpdateTapePosition();
     }
 
-    // 기즈모 그리기 (에디터에서 시각화)
-    void OnDrawGizmos()
-    {
-        if (startPoint != null && endPoint != null)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(startPoint.position, endPoint.position);
+    //// 기즈모 그리기 (에디터에서 시각화)
+    //void OnDrawGizmos()
+    //{
+    //    if (startPoint != null && endPoint != null)
+    //    {
+    //        Gizmos.color = Color.yellow;
+    //        Gizmos.DrawLine(startPoint.position, endPoint.position);
 
-            // 시작점과 끝점 표시
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(startPoint.position, 0.1f);
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(endPoint.position, 0.1f);
-        }
-    }
+    //        // 시작점과 끝점 표시
+    //        Gizmos.color = Color.green;
+    //        Gizmos.DrawWireSphere(startPoint.position, 0.1f);
+    //        Gizmos.color = Color.red;
+    //        Gizmos.DrawWireSphere(endPoint.position, 0.1f);
+    //    }
+    //}
 }
 
 // 여러 개의 테이프를 관리하는 매니저 클래스
