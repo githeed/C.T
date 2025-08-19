@@ -388,7 +388,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 468031205}
-  - component: {fileID: 468031206}
   m_Layer: 0
   m_Name: StartPos
   m_TagString: Untagged
@@ -411,29 +410,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &468031206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 468031204}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fb8520492d780e4b916a367d763b752, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  warningTapeMaterial: {fileID: 0}
-  tapeHeight: 1.5
-  tapeWidth: 0.05
-  tapeColor1: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  tapeColor2: {r: 0, g: 0, b: 0, a: 1}
-  scrollSpeed: 1
-  enableScrolling: 1
-  corners:
-  - {fileID: 468031205}
-  - {fileID: 204424236}
-  closeLoop: 1
 --- !u!1 &1628080510
 GameObject:
   m_ObjectHideFlags: 0
@@ -769,7 +745,6 @@ GameObject:
   - component: {fileID: 2047125024}
   - component: {fileID: 2047125023}
   - component: {fileID: 2047125022}
-  - component: {fileID: 2047125026}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Untagged
@@ -866,29 +841,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2047125026
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2047125021}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3235ca90c9ccc642a9dd2d3fdce130e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tapeMaterial: {fileID: 0}
-  tapeHeight: 1.5
-  tapeWidth: 0.1
-  useStripedPattern: 1
-  stripeWidth: 0.5
-  color1: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  color2: {r: 0, g: 0, b: 0, a: 1}
-  animatePattern: 1
-  animationSpeed: 0
-  startPoint: {fileID: 468031205}
-  endPoint: {fileID: 204424236}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
