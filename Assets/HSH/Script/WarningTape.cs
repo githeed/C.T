@@ -1,64 +1,238 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(LineRenderer))]
 public class WarningTape : MonoBehaviour
 {
-    [Header("Tape Settings")]
+    [Header("Tape Physical Properties")]
     [SerializeField] private Transform startPoint;
     [SerializeField] private Transform endPoint;
-    [SerializeField] private float tapeWidth = 0.1f;
-    [SerializeField] private float sagAmount = 0.2f; // 테이프가 처지는 정도
-    [SerializeField] private int segmentCount = 20; // 곡선의 부드러움 정도
+    [SerializeField] private float tapeWidth = 0.08f; // 실제 테이프 너비 (8cm)
+    [SerializeField] private float sagAmount = 0.3f; // 중력에 의한 처짐
+    [SerializeField] private int segmentCount = 30; // 곡선 부드러움
+    [SerializeField] private float windStrength = 0.02f; // 바람 효과
+    [SerializeField] private float windSpeed = 2f; // 바람 속도
 
-    [Header("Visual Settings")]
-    [SerializeField] private Material tapeMaterial;
-    [SerializeField] private Color primaryColor = Color.red;
-    [SerializeField] private Color secondaryColor = Color.white;
-    [SerializeField] private float patternRepeat = 10f; // 패턴 반복 횟수
+    [Header("Visual Style")]
+    [SerializeField] private bool useStripePattern = true; // 대각선 줄무늬 패턴
+    [SerializeField] private Color primaryColor = new Color(1f, 0.9f, 0f, 1f); // 노란색
+    [SerializeField] private Color secondaryColor = Color.black; // 검은색
+    [SerializeField] private float stripeWidth = 0.5f; // 줄무늬 너비
+    [SerializeField] private float stripeAngle = 45f; // 줄무늬 각도
+
+    [Header("Material Settings")]
+    [SerializeField] private Material tapeMaterial; // 커스텀 머티리얼
+    [SerializeField] private float materialGlossiness = 0.3f; // 광택
+    [SerializeField] private bool doubleSided = true; // 양면 렌더링
+
+    [Header("Animation")]
+    [SerializeField] private bool enableWaving = true; // 바람에 흔들림
+    [SerializeField] private AnimationCurve sagCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f); // 처짐 커브
 
     private LineRenderer lineRenderer;
     private Material instanceMaterial;
+    private Vector3[] basePositions;
+    private float windPhase = 0f;
 
     void Start()
     {
         SetupLineRenderer();
         CreateTapeMaterial();
+        InitializeBasePositions();
     }
 
     void SetupLineRenderer()
     {
         lineRenderer = GetComponent<LineRenderer>();
 
-        // Line Renderer 기본 설정
+        // Line Renderer 설정
         lineRenderer.positionCount = segmentCount;
         lineRenderer.startWidth = tapeWidth;
         lineRenderer.endWidth = tapeWidth;
         lineRenderer.useWorldSpace = true;
+        lineRenderer.textureMode = LineTextureMode.Tile; // 텍스처 타일링
+        lineRenderer.alignment = LineAlignment.View; // 항상 카메라를 향함
 
-        // 양면 렌더링을 위한 설정
-        lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.TwoSided;
-        lineRenderer.alignment = LineAlignment.View;
+        // 끝 부분을 사각형으로 (둥근 캡 제거)
+        lineRenderer.numCapVertices = 0; // 0으로 설정하면 사각형 끝
+        lineRenderer.numCornerVertices = 0; // 모서리도 각지게
+
+        // 그림자 설정
+        lineRenderer.shadowCastingMode = doubleSided ?
+            UnityEngine.Rendering.ShadowCastingMode.TwoSided :
+            UnityEngine.Rendering.ShadowCastingMode.On;
+        lineRenderer.receiveShadows = true;
     }
 
     void CreateTapeMaterial()
     {
         if (tapeMaterial != null)
         {
-            // 머티리얼 인스턴스 생성
             instanceMaterial = new Material(tapeMaterial);
-            lineRenderer.material = instanceMaterial;
         }
         else
         {
-            // 기본 머티리얼 생성
-            instanceMaterial = new Material(Shader.Find("Sprites/Default"));
-            instanceMaterial.color = primaryColor;
-            lineRenderer.material = instanceMaterial;
+            // 기본 머티리얼 생성 (URP Shader 사용)
+            instanceMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            if (instanceMaterial == null) // URP가 없는 경우 폴백
+            {
+                instanceMaterial = new Material(Shader.Find("Sprites/Default"));
+            }
+            instanceMaterial.name = "WarningTapeMaterial";
         }
 
-        // 텍스처 타일링 설정 (줄무늬 패턴을 위해)
-        instanceMaterial.mainTextureScale = new Vector2(patternRepeat, 1f);
+        // 머티리얼 속성 설정
+        ConfigureMaterial();
+
+        lineRenderer.material = instanceMaterial;
+    }
+
+    void ConfigureMaterial()
+    {
+        if (instanceMaterial == null) return;
+
+        // 기본 색상 설정
+        instanceMaterial.color = primaryColor;
+
+        // URP Lit 셰이더용 속성 설정
+        if (instanceMaterial.shader.name.Contains("Universal Render Pipeline"))
+        {
+            // URP Metallic/Smoothness 설정
+            instanceMaterial.SetFloat("_Smoothness", materialGlossiness);
+            instanceMaterial.SetFloat("_Metallic", 0f);
+        }
+        else
+        {
+            // Legacy Standard 셰이더용 (폴백)
+            instanceMaterial.SetFloat("_Glossiness", materialGlossiness);
+            instanceMaterial.SetFloat("_Metallic", 0f);
+        }
+
+        // 양면 렌더링
+        if (doubleSided)
+        {
+            instanceMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
+        }
+
+        // 줄무늬 패턴 텍스처 생성
+        if (useStripePattern)
+        {
+            Texture2D stripeTexture = CreateStripeTexture();
+            instanceMaterial.mainTexture = stripeTexture;
+            instanceMaterial.SetTextureScale("_MainTex", new Vector2(10f, 1f));
+        }
+
+        // 약간의 투명도 (옵션)
+        if (primaryColor.a < 1f || secondaryColor.a < 1f)
+        {
+            // URP Transparent 설정
+            if (instanceMaterial.shader.name.Contains("Universal Render Pipeline"))
+            {
+                // Surface Type을 Transparent로 변경
+                instanceMaterial.SetFloat("_Surface", 1); // 0 = Opaque, 1 = Transparent
+                instanceMaterial.SetFloat("_Blend", 0); // 0 = Alpha, 1 = Premultiply, 2 = Additive, 3 = Multiply
+
+                // Render Face 설정
+                instanceMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
+
+                // 블렌딩 모드 설정
+                instanceMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                instanceMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                instanceMaterial.SetInt("_ZWrite", 0);
+
+                // 렌더 큐 설정
+                instanceMaterial.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+
+                // 키워드 활성화
+                instanceMaterial.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+                instanceMaterial.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+            }
+            else
+            {
+                // Legacy Transparent 렌더링 모드 설정
+                instanceMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                instanceMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                instanceMaterial.SetInt("_ZWrite", 0);
+                instanceMaterial.DisableKeyword("_ALPHATEST_ON");
+                instanceMaterial.EnableKeyword("_ALPHABLEND_ON");
+                instanceMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                instanceMaterial.renderQueue = 3000;
+            }
+        }
+    }
+
+    Texture2D CreateStripeTexture()
+    {
+        int textureSize = 256;
+        Texture2D texture = new Texture2D(textureSize, textureSize);
+
+        // 대각선 줄무늬 패턴 생성
+        for (int x = 0; x < textureSize; x++)
+        {
+            for (int y = 0; y < textureSize; y++)
+            {
+                // 대각선 계산
+                float diagonal = (x + y * Mathf.Tan(stripeAngle * Mathf.Deg2Rad)) % (textureSize * stripeWidth);
+                bool isStripe = diagonal < (textureSize * stripeWidth * 0.5f);
+
+                Color pixelColor = isStripe ? primaryColor : secondaryColor;
+                texture.SetPixel(x, y, pixelColor);
+            }
+        }
+
+        texture.Apply();
+        texture.wrapMode = TextureWrapMode.Repeat;
+        texture.filterMode = FilterMode.Bilinear;
+
+        return texture;
+    }
+
+    void InitializeBasePositions()
+    {
+        basePositions = new Vector3[segmentCount];
+        UpdateBasePositions();
+    }
+
+    void UpdateBasePositions()
+    {
+        if (startPoint == null || endPoint == null) return;
+
+        Vector3 start = startPoint.position;
+        Vector3 end = endPoint.position;
+
+        for (int i = 0; i < segmentCount; i++)
+        {
+            float t = i / (float)(segmentCount - 1);
+            Vector3 point = Vector3.Lerp(start, end, t);
+
+            // 카테나리 곡선 (실제 늘어진 테이프 모양)
+            float sag = CalculateCatenarySag(t);
+            point.y -= sag * sagAmount;
+
+            basePositions[i] = point;
+        }
+    }
+
+    float CalculateCatenarySag(float t)
+    {
+        // 카테나리 곡선 근사 (쌍곡코사인 함수)
+        // 중앙이 가장 많이 처지도록
+        float x = (t - 0.5f) * 2f; // -1 to 1 범위로 변환
+        float cosh = (Mathf.Exp(x) + Mathf.Exp(-x)) / 2f;
+        float catenary = cosh - 1f;
+
+        // AnimationCurve로 추가 제어
+        if (sagCurve != null && sagCurve.length > 0)
+        {
+            catenary *= sagCurve.Evaluate(t);
+        }
+        else
+        {
+            // 기본 포물선 커브
+            catenary *= Mathf.Sin(t * Mathf.PI);
+        }
+
+        return catenary;
     }
 
     void Update()
@@ -66,39 +240,57 @@ public class WarningTape : MonoBehaviour
         if (startPoint != null && endPoint != null)
         {
             UpdateTapePosition();
+
+            if (enableWaving)
+            {
+                ApplyWindEffect();
+            }
         }
     }
 
     void UpdateTapePosition()
     {
-        Vector3 start = startPoint.position;
-        Vector3 end = endPoint.position;
+        UpdateBasePositions();
+    }
 
-        // 테이프의 처짐을 표현하기 위한 카테나리 곡선 또는 간단한 포물선 사용
+    void ApplyWindEffect()
+    {
+        windPhase += Time.deltaTime * windSpeed;
+
         for (int i = 0; i < segmentCount; i++)
         {
+            Vector3 position = basePositions[i];
+
+            // 바람에 의한 좌우 흔들림
             float t = i / (float)(segmentCount - 1);
-            Vector3 point = Vector3.Lerp(start, end, t);
+            float windEffect = Mathf.Sin(windPhase + t * Mathf.PI * 2f) * windStrength;
 
-            // 중력에 의한 처짐 효과 (포물선)
-            float sag = Mathf.Sin(t * Mathf.PI) * sagAmount;
-            point.y -= sag;
+            // 중앙 부분이 더 많이 흔들리도록
+            float centerWeight = Mathf.Sin(t * Mathf.PI);
+            windEffect *= centerWeight;
 
-            lineRenderer.SetPosition(i, point);
+            // 수평 방향으로만 흔들림
+            Vector3 windDirection = Vector3.Cross(Vector3.up,
+                (endPoint.position - startPoint.position).normalized);
+            position += windDirection * windEffect;
+
+            // 약간의 수직 움직임도 추가
+            position.y += Mathf.Sin(windPhase * 1.5f + t * Mathf.PI) * windStrength * 0.3f * centerWeight;
+
+            lineRenderer.SetPosition(i, position);
         }
     }
 
-    // 런타임에서 시작점과 끝점을 설정할 수 있는 메서드
+    // 공개 메서드들
     public void SetPoints(Transform newStartPoint, Transform newEndPoint)
     {
         startPoint = newStartPoint;
         endPoint = newEndPoint;
-        UpdateTapePosition();
+        InitializeBasePositions();
     }
 
     public void SetPoints(Vector3 startPosition, Vector3 endPosition)
     {
-        // GameObject가 없을 경우 위치만으로 설정
         if (startPoint == null)
         {
             GameObject startObj = new GameObject("TapeStart");
@@ -123,25 +315,27 @@ public class WarningTape : MonoBehaviour
             endPoint.position = endPosition;
         }
 
-        UpdateTapePosition();
+        InitializeBasePositions();
     }
 
-    // 테이프 색상 변경
-    public void SetColors(Color primary, Color secondary)
+    public void SetTapeStyle(Color primary, Color secondary, float stripeWidthValue)
     {
         primaryColor = primary;
         secondaryColor = secondary;
+        stripeWidth = stripeWidthValue;
 
         if (instanceMaterial != null)
         {
-            instanceMaterial.color = primaryColor;
+            ConfigureMaterial();
         }
     }
 
-    // 테이프 너비 변경
-    public void SetTapeWidth(float width)
+    public void SetPhysicalProperties(float width, float sag, float wind)
     {
         tapeWidth = width;
+        sagAmount = sag;
+        windStrength = wind;
+
         if (lineRenderer != null)
         {
             lineRenderer.startWidth = tapeWidth;
@@ -149,114 +343,62 @@ public class WarningTape : MonoBehaviour
         }
     }
 
-    // 처짐 정도 변경
-    public void SetSagAmount(float sag)
+    // 테이프 스타일 프리셋
+    public enum TapeStyle
     {
-        sagAmount = sag;
-        UpdateTapePosition();
+        YellowBlack,    // 노란색-검은색 (일반 경고)
+        RedWhite,       // 빨간색-흰색 (위험)
+        BlueWhite,      // 파란색-흰색 (정보)
+        OrangeWhite,    // 주황색-흰색 (주의)
+        GreenWhite      // 녹색-흰색 (안전)
     }
 
-    //// 기즈모 그리기 (에디터에서 시각화)
-    //void OnDrawGizmos()
-    //{
-    //    if (startPoint != null && endPoint != null)
-    //    {
-    //        Gizmos.color = Color.yellow;
-    //        Gizmos.DrawLine(startPoint.position, endPoint.position);
-
-    //        // 시작점과 끝점 표시
-    //        Gizmos.color = Color.green;
-    //        Gizmos.DrawWireSphere(startPoint.position, 0.1f);
-    //        Gizmos.color = Color.red;
-    //        Gizmos.DrawWireSphere(endPoint.position, 0.1f);
-    //    }
-    //}
-}
-
-// 여러 개의 테이프를 관리하는 매니저 클래스
-public class WarningTapeManager : MonoBehaviour
-{
-    [Header("Tape Prefab")]
-    [SerializeField] private GameObject tapePrefab;
-
-    [Header("Tape Chain Settings")]
-    [SerializeField] private Transform[] tapePoints; // 연결할 포인트들
-    [SerializeField] private bool createLoop = false; // 마지막 점과 첫 점을 연결할지 여부
-
-    private List<GameObject> tapeInstances = new List<GameObject>();
-
-    void Start()
+    public void ApplyPresetStyle(TapeStyle style)
     {
-        CreateTapeChain();
-    }
-
-    void CreateTapeChain()
-    {
-        if (tapePoints == null || tapePoints.Length < 2)
+        switch (style)
         {
-            Debug.LogWarning("At least 2 points are required to create tape chain!");
-            return;
-        }
-
-        // 연속된 점들 사이에 테이프 생성
-        for (int i = 0; i < tapePoints.Length - 1; i++)
-        {
-            CreateTapeBetweenPoints(tapePoints[i], tapePoints[i + 1]);
-        }
-
-        // 루프 생성 (선택사항)
-        if (createLoop && tapePoints.Length > 2)
-        {
-            CreateTapeBetweenPoints(tapePoints[tapePoints.Length - 1], tapePoints[0]);
+            case TapeStyle.YellowBlack:
+                SetTapeStyle(new Color(1f, 0.9f, 0f), Color.black, 0.5f);
+                break;
+            case TapeStyle.RedWhite:
+                SetTapeStyle(Color.red, Color.white, 0.5f);
+                break;
+            case TapeStyle.BlueWhite:
+                SetTapeStyle(Color.blue, Color.white, 0.5f);
+                break;
+            case TapeStyle.OrangeWhite:
+                SetTapeStyle(new Color(1f, 0.5f, 0f), Color.white, 0.5f);
+                break;
+            case TapeStyle.GreenWhite:
+                SetTapeStyle(Color.green, Color.white, 0.5f);
+                break;
         }
     }
 
-    void CreateTapeBetweenPoints(Transform start, Transform end)
+    // 기즈모 (에디터에서 시각화)
+    void OnDrawGizmos()
     {
-        GameObject tapeObj;
-
-        if (tapePrefab != null)
+        if (startPoint != null && endPoint != null)
         {
-            tapeObj = Instantiate(tapePrefab, transform);
-        }
-        else
-        {
-            tapeObj = new GameObject("WarningTape");
-            tapeObj.transform.parent = transform;
-            tapeObj.AddComponent<WarningTape>();
-        }
+            // 직선 연결선
+            Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
+            Gizmos.DrawLine(startPoint.position, endPoint.position);
 
-        WarningTape tape = tapeObj.GetComponent<WarningTape>();
-        if (tape != null)
-        {
-            tape.SetPoints(start, end);
-        }
+            // 시작점과 끝점
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(startPoint.position, 0.1f);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(endPoint.position, 0.1f);
 
-        tapeInstances.Add(tapeObj);
-    }
-
-    // 모든 테이프 제거
-    public void ClearAllTapes()
-    {
-        foreach (var tape in tapeInstances)
-        {
-            if (tape != null)
-                DestroyImmediate(tape);
-        }
-        tapeInstances.Clear();
-    }
-
-    // 새로운 포인트 추가
-    public void AddPoint(Transform newPoint)
-    {
-        if (tapePoints != null && tapePoints.Length > 0)
-        {
-            Transform lastPoint = tapePoints[tapePoints.Length - 1];
-            CreateTapeBetweenPoints(lastPoint, newPoint);
-
-            // 배열 확장
-            System.Array.Resize(ref tapePoints, tapePoints.Length + 1);
-            tapePoints[tapePoints.Length - 1] = newPoint;
+            // 처짐 표시
+            if (Application.isPlaying && basePositions != null && basePositions.Length > 0)
+            {
+                Gizmos.color = new Color(1f, 0.5f, 0f, 0.5f);
+                for (int i = 0; i < basePositions.Length - 1; i++)
+                {
+                    Gizmos.DrawLine(basePositions[i], basePositions[i + 1]);
+                }
+            }
         }
     }
 }

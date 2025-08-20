@@ -154,10 +154,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPoint: {fileID: 0}
   endPoint: {fileID: 0}
-  tapeWidth: 1.5
+  tapeWidth: 1
   sagAmount: 0.2
   segmentCount: 20
-  tapeMaterial: {fileID: 0}
+  windStrength: 0.02
+  windSpeed: 2
+  useStripePattern: 1
   primaryColor: {r: 1, g: 0, b: 0, a: 1}
   secondaryColor: {r: 1, g: 1, b: 1, a: 1}
-  patternRepeat: 10
+  stripeWidth: 0.5
+  stripeAngle: 45
+  tapeMaterial: {fileID: 0}
+  materialGlossiness: 0.3
+  doubleSided: 1
+  enableWaving: 1
+  sagCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

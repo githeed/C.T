@@ -252,7 +252,7 @@ Transform:
   m_GameObject: {fileID: 204424235}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5, y: -3, z: -5}
+  m_LocalPosition: {x: 5, y: 0, z: -5}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -404,7 +404,7 @@ Transform:
   m_GameObject: {fileID: 468031204}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5, y: -3, z: -5}
+  m_LocalPosition: {x: -5, y: 0, z: -5}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -880,13 +880,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPoint: {fileID: 468031205}
   endPoint: {fileID: 204424236}
-  tapeWidth: 0.1
+  tapeWidth: 0.8
   sagAmount: 0.2
   segmentCount: 20
+  windStrength: 0.02
+  windSpeed: 2
+  useStripePattern: 1
+  primaryColor: {r: 0.79288566, g: 1, b: 0, a: 1}
+  secondaryColor: {r: 0, g: 0, b: 0, a: 1}
+  stripeWidth: 1
+  stripeAngle: 45
   tapeMaterial: {fileID: 0}
-  primaryColor: {r: 1, g: 0, b: 0, a: 1}
-  secondaryColor: {r: 1, g: 1, b: 1, a: 1}
-  patternRepeat: 10
+  materialGlossiness: 0.3
+  doubleSided: 1
+  enableWaving: 1
+  sagCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!120 &2047125027
 LineRenderer:
   serializedVersion: 2
