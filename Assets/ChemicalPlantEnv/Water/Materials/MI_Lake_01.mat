@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MI_Lake_01
+  m_Shader: {fileID: 4800000, guid: abc00000000010140819247774575800, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Material_Texture2D_0:
+        m_Texture: {fileID: 2800000, guid: abc00000000012091962505159757189, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - Normal_Speed: 0.300000
+    - Normal_Tiling: 936.330811
+    - NormalStrength: -0.288935
+    - Normal_Tiling__Distance: 27988.134766
+    - NormalStrength_Distance: 0.000000
+    - FarDistanceTexture: 165703.531250
+    - WaterColor_Distance: 448.117889
+    - Foam_Speed: 0.100000
+    - Foam_Tiling: 326.368744
+    - FoamAmount: 1.000000
+    - Foam_Distance: 59.294323
+    - ColorBrightness: 0.142981
+    - Metallic: 0.507153
+    - Specular_1: 1.000000
+    - Roughness: -8.736034
+    - Opacity: 0.942857
+    - FadeDistance: 19.007460
+    - RefractionDepthBias: 0.000000
+    - _DstBlend: 0
+    - _SrcBlend: 1
+    - _UVSec: 0
+    - _ZWrite: 1
+    m_Colors:
+    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - SelectionColor: {r: 0.000000, g: 0.000000, b: 0.000000, a: 0.000000}
+    - WaterColor_Deep: {r: 0.142312, g: 0.166667, b: 0.081173, a: 1.000000}
+    - WaterColor_Shallow: {r: 0.869792, g: 0.731567, b: 0.439358, a: 1.000000}
