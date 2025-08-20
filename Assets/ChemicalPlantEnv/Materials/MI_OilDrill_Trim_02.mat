@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MI_OilDrill_Trim_02
+  m_Shader: {fileID: 4800000, guid: abc00000000001317493808666911528, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Material_Texture2D_0:
+        m_Texture: {fileID: 2800000, guid: abc00000000004106046862983523227, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Material_Texture2D_1:
+        m_Texture: {fileID: 2800000, guid: abc00000000004350287341277575149, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Material_Texture2D_2:
+        m_Texture: {fileID: 2800000, guid: abc00000000017109667589638654100, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Material_Texture2D_3:
+        m_Texture: {fileID: 2800000, guid: abc00000000010104698958878883895, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Material_Texture2D_4:
+        m_Texture: {fileID: 2800000, guid: abc00000000000963321798989831017, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Material_Texture2D_5:
+        m_Texture: {fileID: 2800000, guid: abc00000000000942486438452758700, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - NormalIntensity: 1.200000
+    - DirtNormalIntensity: 0.110000
+    - DirtMaskIntensity: 1.650000
+    - DirtMaskContrast: 1.000000
+    - OilMaskIntensity: 1.000000
+    - OilMaskContrast: 0.668000
+    - SpecularIntensity: 1.000000
+    - Roughness_Strength: 1.000000
+    - Roughness_Contrast: 1.000000
+    - Dirt_Roughness_Strength: 1.000000
+    - Oil_Roughness_Strength: 0.500000
+    - _DstBlend: 0
+    - _SrcBlend: 1
+    - _UVSec: 0
+    - _ZWrite: 1
+    m_Colors:
+    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - SelectionColor: {r: 0.000000, g: 0.000000, b: 0.000000, a: 0.000000}
+    - SVC: {r: 1.000000, g: 1.000000, b: 1.000000, a: 1.000000}
+    - Tint: {r: 1.000000, g: 1.000000, b: 1.000000, a: 1.000000}
+    - DirtAlbedo: {r: 0.067708, g: 0.052622, b: 0.030321, a: 1.000000}
+    - Dirt_SVC: {r: 1.000000, g: 1.000000, b: 1.000000, a: 1.000000}
+    - Dirt_Tint: {r: 1.000000, g: 1.000000, b: 1.000000, a: 1.000000}
+    - Oil_Albedo: {r: 0.020833, g: 0.020833, b: 0.020833, a: 1.000000}
+    - Oil_SVC: {r: 1.000000, g: 1.000000, b: 1.000000, a: 1.000000}
+    - Oil_Tint: {r: 1.000000, g: 1.000000, b: 1.000000, a: 1.000000}
