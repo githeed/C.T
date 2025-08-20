@@ -149,7 +149,7 @@ public class TapePlacementSystem : MonoBehaviour
         // 사운드 재생
         PlaySound(placeSound);
 
-        Debug.Log("테이프 시작점 설정됨. E키를 다시 눌러 끝점을 설정하고 완료하세요.");
+        Debug.Log("테이프 시작점 설정됨");
     }
 
     void CompletePlacement(Vector3 position)
@@ -176,7 +176,7 @@ public class TapePlacementSystem : MonoBehaviour
         // 사운드 재생
         PlaySound(placeSound);
 
-        Debug.Log("테이프 설치 완료! 설치 모드가 종료되었습니다.");
+        Debug.Log("테이프 설치 완료!.");
     }
 
     void CreateTape(Vector3 start, Vector3 end)

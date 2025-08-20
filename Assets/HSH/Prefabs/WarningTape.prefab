@@ -160,8 +160,8 @@ MonoBehaviour:
   windStrength: 0.02
   windSpeed: 2
   useStripePattern: 1
-  primaryColor: {r: 1, g: 0, b: 0, a: 1}
-  secondaryColor: {r: 1, g: 1, b: 1, a: 1}
+  primaryColor: {r: 0.9742701, g: 1, b: 0, a: 1}
+  secondaryColor: {r: 0, g: 0, b: 0, a: 1}
   stripeWidth: 0.5
   stripeAngle: 45
   tapeMaterial: {fileID: 0}
