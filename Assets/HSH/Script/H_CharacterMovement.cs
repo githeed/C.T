@@ -37,7 +37,8 @@ public class H_CharacterMovement : MonoBehaviour
         // 카메라 자동 찾기 및 연결
         if (cameraTransform == null)
         {
-            H_CamController camera = FindObjectOfType<H_CamController>();
+            H_CamController camera = FindFirstObjectByType<H_CamController>(FindObjectsInactive.Exclude);
+
             if (camera != null)
             {
                 cameraTransform = camera.transform;
