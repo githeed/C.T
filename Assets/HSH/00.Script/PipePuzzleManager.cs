@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
@@ -34,11 +34,11 @@ public class PipePuzzleManager : MonoBehaviour
     public TextMeshProUGUI movesText;
     public TextMeshProUGUI timerText;
     public Button resetButton;
-    public GameObject gamePanel;      // °ÔÀÓ ÇÃ·¹ÀÌ ÆĞ³Î
-    public GameObject successPanel;   // ¼º°ø ½Ã Ç¥½ÃÇÒ ÆĞ³Î
+    public GameObject gamePanel;
+    public GameObject successPanel;
     public TextMeshProUGUI successMessage;
-    public Button nextLevelButton;    // Success Panel ³»ÀÇ ´ÙÀ½ ·¹º§ ¹öÆ°
-    public Button retryButton;         // Success Panel ³»ÀÇ Àç½Ãµµ ¹öÆ°
+    public Button nextLevelButton;
+    public Button retryButton;
 
     private PipeTile[,] grid;
     private Vector2Int startPos;
@@ -48,28 +48,21 @@ public class PipePuzzleManager : MonoBehaviour
     private float gameTime = 0;
     private bool isPlaying = true;
     private List<Vector2Int> solutionPath;
+    private bool isAnimating = false;
 
     void Start()
     {
-        // ÇÊ¼ö ÄÄÆ÷³ÍÆ® Ã¼Å©
         if (!ValidateComponents())
         {
-            Debug.LogError("ÇÊ¼ö ÄÄÆ÷³ÍÆ®°¡ ¾ø½À´Ï´Ù. Inspector¸¦ È®ÀÎÇØÁÖ¼¼¿ä!");
+            Debug.LogError("í•„ìˆ˜ ì»´í¬ë„ŒíŠ¸ê°€ ì—†ìŠµë‹ˆë‹¤. Inspectorë¥¼ í™•ì¸í•´ì£¼ì„¸ìš”!");
             return;
         }
 
         InitializeGrid();
         GenerateLevel();
 
-        // ¹öÆ° ¸®½º³Ê µî·Ï (null Ã¼Å© Æ÷ÇÔ)
-        //if (checkButton != null) checkButton.onClick.AddListener(CheckSolution);
-        //else Debug.LogWarning("Check ButtonÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
-
         if (resetButton != null) resetButton.onClick.AddListener(ResetLevel);
-        else Debug.LogWarning("Reset ButtonÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
-
         if (nextLevelButton != null) nextLevelButton.onClick.AddListener(NextLevel);
-        else Debug.LogWarning("New Level ButtonÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
     }
 
     bool ValidateComponents()
@@ -78,32 +71,25 @@ public class PipePuzzleManager : MonoBehaviour
 
         if (tilePrefab == null)
         {
-            Debug.LogError("Tile PrefabÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+            Debug.LogError("Tile Prefabì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
             isValid = false;
         }
 
         if (gridContainer == null)
         {
-            Debug.LogError("Grid Container°¡ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+            Debug.LogError("Grid Containerê°€ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
             isValid = false;
         }
 
         if (gridLayout == null)
         {
-            // GridLayoutÀÌ ¾øÀ¸¸é ÀÚµ¿À¸·Î Ã£±â
             gridLayout = gridContainer?.GetComponent<GridLayoutGroup>();
             if (gridLayout == null)
             {
-                Debug.LogError("Grid Layout GroupÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù!");
+                Debug.LogError("Grid Layout Groupì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤!");
                 isValid = false;
             }
         }
-
-        // ½ºÇÁ¶óÀÌÆ® Ã¼Å©
-        if (straightSprite == null) Debug.LogWarning("Straight Sprite°¡ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
-        if (cornerSprite == null) Debug.LogWarning("Corner Sprite°¡ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
-        if (startSprite == null) Debug.LogWarning("Start Sprite°¡ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
-        if (endSprite == null) Debug.LogWarning("End Sprite°¡ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
 
         return isValid;
     }
@@ -121,7 +107,6 @@ public class PipePuzzleManager : MonoBehaviour
     {
         grid = new PipeTile[gridHeight, gridWidth];
 
-        // Grid Layout ¼³Á¤
         gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
         gridLayout.constraintCount = gridWidth;
         gridLayout.cellSize = new Vector2(80, 80);
@@ -134,36 +119,22 @@ public class PipePuzzleManager : MonoBehaviour
 
         if (tilePrefab == null || gridContainer == null)
         {
-            Debug.LogError("ÇÊ¼ö ÄÄÆ÷³ÍÆ®°¡ ¾ø½À´Ï´Ù!");
+            Debug.LogError("í•„ìˆ˜ ì»´í¬ë„ŒíŠ¸ê°€ ì—†ìŠµë‹ˆë‹¤!");
             return;
         }
 
-        Debug.Log($"·¹º§ »ı¼º ½ÃÀÛ - Å©±â: {gridWidth}x{gridHeight}");
+        List<PipeType> availablePipes = new List<PipeType> {
+            PipeType.Straight, PipeType.Corner, PipeType.TShape, PipeType.Cross
+        };
 
-        // ³­ÀÌµµ¿¡ µû¸¥ ÆÄÀÌÇÁ ¹èÄ¡
-        List<PipeType> availablePipes = new List<PipeType>();
+        // ì‹œì‘ì ê³¼ ëì  ì„¤ì •
+        startPos = new Vector2Int(0, Random.Range(1, gridHeight - 1));
+        endPos = new Vector2Int(gridWidth - 1, Random.Range(1, gridHeight - 1));
 
-        if (currentLevel <= 3)
-        {
-            availablePipes = new List<PipeType> { PipeType.Straight, PipeType.Corner };
-        }
-        else if (currentLevel <= 6)
-        {
-            availablePipes = new List<PipeType> { PipeType.Straight, PipeType.Corner, PipeType.TShape };
-        }
-        else
-        {
-            availablePipes = new List<PipeType> { PipeType.Straight, PipeType.Corner, PipeType.TShape, PipeType.Cross };
-        }
-
-        // ½ÃÀÛÁ¡°ú ³¡Á¡ ¼³Á¤
-        startPos = new Vector2Int(0, Random.Range(0, gridHeight));
-        endPos = new Vector2Int(gridWidth - 1, Random.Range(0, gridHeight));
-
-        // ¼Ö·ç¼Ç °æ·Î »ı¼º
+        // ì†”ë£¨ì…˜ ê²½ë¡œ ìƒì„±
         GenerateSolutionPath();
 
-        // ±×¸®µå »ı¼º
+        // ê·¸ë¦¬ë“œ ìƒì„±
         for (int y = 0; y < gridHeight; y++)
         {
             for (int x = 0; x < gridWidth; x++)
@@ -193,12 +164,15 @@ public class PipePuzzleManager : MonoBehaviour
                 else if (IsOnSolutionPath(new Vector2Int(x, y)))
                 {
                     pipeType = GetPipeTypeForSolution(new Vector2Int(x, y));
-                    rotation = Random.Range(0, 4) * 90;
+                    // ì˜¬ë°”ë¥¸ íšŒì „ê°’ ì„¤ì • í›„ ëœë¤í•˜ê²Œ ì„ê¸°
+                    rotation = GetCorrectRotationForSolution(new Vector2Int(x, y));
+                    // í¼ì¦ì„ ìœ„í•´ ëœë¤í•˜ê²Œ íšŒì „ ì¶”ê°€
+                    rotation = (rotation + Random.Range(1, 4) * 90) % 360;
                 }
                 else
                 {
                     float randomValue = Random.Range(0f, 1f);
-                    if (randomValue < 0.4f)
+                    if (randomValue < 0.3f)
                     {
                         pipeType = PipeType.Empty;
                         rotation = 0;
@@ -212,8 +186,8 @@ public class PipePuzzleManager : MonoBehaviour
 
                 grid[y, x] = new PipeTile(pipeType, rotation);
                 grid[y, x].tileObject = tileObj;
+                grid[y, x].UpdateConnections();
 
-                // ÃÊ±â È¸Àü°ª ¼³Á¤
                 tileObj.transform.rotation = Quaternion.Euler(0, 0, rotation);
 
                 tileUI.Initialize(this, new Vector2Int(x, y), grid[y, x]);
@@ -222,26 +196,24 @@ public class PipePuzzleManager : MonoBehaviour
         }
 
         UpdateUI();
+        CheckSolution(); // ì´ˆê¸° ìƒíƒœ ì²´í¬
     }
 
     void GenerateSolutionPath()
     {
         solutionPath = FindPath(startPos, endPos);
 
-        // °æ·Î¸¦ Ã£Áö ¸øÇÑ °æ¿ì (Àı´ë ÀÏ¾î³ª¼­´Â ¾ÈµÊ)
         if (solutionPath == null || solutionPath.Count == 0)
         {
-            Debug.LogError("°æ·Î¸¦ »ı¼ºÇÒ ¼ö ¾ø½À´Ï´Ù!");
-            // Á÷¼± °æ·Î °­Á¦ »ı¼º
+            Debug.LogError("ê²½ë¡œë¥¼ ìƒì„±í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤!");
             solutionPath = new List<Vector2Int>();
             solutionPath.Add(startPos);
             solutionPath.Add(endPos);
         }
 
-        Debug.Log($"¼Ö·ç¼Ç °æ·Î »ı¼º ¿Ï·á: {solutionPath.Count}°³ Å¸ÀÏ");
+        Debug.Log($"ì†”ë£¨ì…˜ ê²½ë¡œ ìƒì„± ì™„ë£Œ: {solutionPath.Count}ê°œ íƒ€ì¼");
     }
 
-    // A* °æ·Î Ã£±â ¾Ë°í¸®Áò
     List<Vector2Int> FindPath(Vector2Int start, Vector2Int end)
     {
         Dictionary<Vector2Int, Vector2Int?> cameFrom = new Dictionary<Vector2Int, Vector2Int?>();
@@ -255,7 +227,6 @@ public class PipePuzzleManager : MonoBehaviour
 
         while (openSet.Count > 0)
         {
-            // fScore°¡ °¡Àå ³·Àº ³ëµå Ã£±â
             Vector2Int current = openSet[0];
             float lowestFScore = fScore[current];
             foreach (var node in openSet)
@@ -269,7 +240,6 @@ public class PipePuzzleManager : MonoBehaviour
 
             if (current == end)
             {
-                // °æ·Î Àç±¸¼º
                 List<Vector2Int> path = new List<Vector2Int>();
                 Vector2Int? node = current;
                 while (node.HasValue)
@@ -283,7 +253,6 @@ public class PipePuzzleManager : MonoBehaviour
 
             openSet.Remove(current);
 
-            // ÀÌ¿ô ³ëµå È®ÀÎ
             Vector2Int[] neighbors = {
                 current + Vector2Int.up,
                 current + Vector2Int.down,
@@ -293,7 +262,6 @@ public class PipePuzzleManager : MonoBehaviour
 
             foreach (var neighbor in neighbors)
             {
-                // ±×¸®µå ¹üÀ§ Ã¼Å©
                 if (neighbor.x < 0 || neighbor.x >= gridWidth ||
                     neighbor.y < 0 || neighbor.y >= gridHeight)
                     continue;
@@ -312,25 +280,21 @@ public class PipePuzzleManager : MonoBehaviour
             }
         }
 
-        // °æ·Î¸¦ Ã£Áö ¸øÇÑ °æ¿ì Á÷Á¢ °æ·Î »ı¼º
         return CreateDirectPath(start, end);
     }
 
-    // Á÷Á¢ °æ·Î »ı¼º (¹é¾÷¿ë)
     List<Vector2Int> CreateDirectPath(Vector2Int start, Vector2Int end)
     {
         List<Vector2Int> path = new List<Vector2Int>();
         Vector2Int current = start;
         path.Add(current);
 
-        // ¸ÕÀú xÃàÀ¸·Î ÀÌµ¿
         while (current.x != end.x)
         {
             current.x += (end.x > current.x) ? 1 : -1;
             path.Add(current);
         }
 
-        // ±×´ÙÀ½ yÃàÀ¸·Î ÀÌµ¿
         while (current.y != end.y)
         {
             current.y += (end.y > current.y) ? 1 : -1;
@@ -353,7 +317,6 @@ public class PipePuzzleManager : MonoBehaviour
         Vector2Int? prev = index > 0 ? solutionPath[index - 1] : (Vector2Int?)null;
         Vector2Int? next = index < solutionPath.Count - 1 ? solutionPath[index + 1] : (Vector2Int?)null;
 
-        // ¿¬°á ¹æÇâ °è»ê
         bool connectUp = false, connectDown = false, connectLeft = false, connectRight = false;
 
         if (prev.HasValue)
@@ -374,7 +337,6 @@ public class PipePuzzleManager : MonoBehaviour
             else if (diff == Vector2Int.right) connectRight = true;
         }
 
-        // ÆÄÀÌÇÁ Å¸ÀÔ °áÁ¤
         if ((connectLeft && connectRight) || (connectUp && connectDown))
         {
             return PipeType.Straight;
@@ -385,15 +347,13 @@ public class PipePuzzleManager : MonoBehaviour
             return PipeType.Corner;
         }
 
-        // ¿¹¿Ü Ã³¸®
         return PipeType.Straight;
     }
 
-    // ¼Ö·ç¼Ç °æ·Î¿¡ ¸Â´Â ¿Ã¹Ù¸¥ È¸Àü°ª °è»ê
     int GetCorrectRotationForSolution(Vector2Int pos)
     {
         int index = solutionPath.IndexOf(pos);
-        if (index == -1) return Random.Range(0, 4) * 90;
+        if (index == -1) return 0;
 
         Vector2Int? prev = index > 0 ? solutionPath[index - 1] : (Vector2Int?)null;
         Vector2Int? next = index < solutionPath.Count - 1 ? solutionPath[index + 1] : (Vector2Int?)null;
@@ -402,15 +362,14 @@ public class PipePuzzleManager : MonoBehaviour
 
         if (type == PipeType.Straight)
         {
-            // ¼öÆò ¶Ç´Â ¼öÁ÷ °áÁ¤
             if ((prev.HasValue && prev.Value.x != pos.x) ||
                 (next.HasValue && next.Value.x != pos.x))
             {
-                return 0; // ¼öÆò
+                return 0; // ìˆ˜í‰
             }
             else
             {
-                return 90; // ¼öÁ÷
+                return 90; // ìˆ˜ì§
             }
         }
         else if (type == PipeType.Corner)
@@ -435,47 +394,42 @@ public class PipePuzzleManager : MonoBehaviour
                 else if (diff == Vector2Int.right) connectRight = true;
             }
 
-            // ÄÚ³Ê È¸Àü °áÁ¤
-            if (connectUp && connectRight) return 0;    // ¦±
-            if (connectRight && connectDown) return 90;  // ¦®
-            if (connectDown && connectLeft) return 180;  // ¦¯
-            if (connectLeft && connectUp) return 270;    // ¦°
+            if (connectUp && connectRight) return 0;
+            if (connectRight && connectDown) return 90;
+            if (connectDown && connectLeft) return 180;
+            if (connectLeft && connectUp) return 270;
         }
 
-        return Random.Range(0, 4) * 90;
+        return 0;
     }
 
     public void RotateTile(Vector2Int pos)
     {
+        if (isAnimating) return;
+
         if (grid[pos.y, pos.x].type == PipeType.Empty ||
             grid[pos.y, pos.x].type == PipeType.Start ||
             grid[pos.y, pos.x].type == PipeType.End)
             return;
 
-        // È¸Àü°ª ¾÷µ¥ÀÌÆ®
         grid[pos.y, pos.x].Rotate();
-
-        // Áß¿ä: ¿¬°á Á¤º¸ ¾÷µ¥ÀÌÆ®
-        UpdatePipeTileConnections(grid[pos.y, pos.x]);
+        grid[pos.y, pos.x].UpdateConnections();
 
         moveCount++;
         UpdateUI();
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
         StartCoroutine(RotateAnimation(grid[pos.y, pos.x].tileObject.transform, pos));
     }
 
-    // ¼öÁ¤µÈ RotateAnimation
     IEnumerator RotateAnimation(Transform tile, Vector2Int pos)
     {
+        isAnimating = true;
         float duration = 0.2f;
         float elapsed = 0;
 
-        // ÇöÀç È¸Àü°ª°ú ¸ñÇ¥ È¸Àü°ª
         float startRotation = tile.eulerAngles.z;
         float endRotation = grid[pos.y, pos.x].rotation;
 
-        // ÃÖ´Ü °æ·Î·Î È¸ÀüÇÏµµ·Ï Á¶Á¤
         float diff = Mathf.DeltaAngle(startRotation, endRotation);
         endRotation = startRotation + diff;
 
@@ -483,8 +437,6 @@ public class PipePuzzleManager : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = elapsed / duration;
-
-            // Smooth º¸°£
             t = t * t * (3f - 2f * t);
 
             float currentRotation = Mathf.Lerp(startRotation, endRotation, t);
@@ -492,14 +444,12 @@ public class PipePuzzleManager : MonoBehaviour
             yield return null;
         }
 
-        // ÃÖÁ¾ È¸Àü°ª ¼³Á¤
         tile.rotation = Quaternion.Euler(0, 0, grid[pos.y, pos.x].rotation);
 
-        // ½Ã°¢Àû ¾÷µ¥ÀÌÆ®
         UpdateTileVisual(pos);
-
-        // ¼Ö·ç¼Ç Ã¼Å©
         CheckSolution();
+
+        isAnimating = false;
     }
 
     void UpdateTileVisual(Vector2Int pos)
@@ -509,23 +459,27 @@ public class PipePuzzleManager : MonoBehaviour
 
         Image img = tile.tileObject.GetComponent<Image>();
 
-        // ½ºÇÁ¶óÀÌÆ® ¼³Á¤
         switch (tile.type)
         {
             case PipeType.Empty:
                 img.sprite = emptySprite;
+                img.color = normalColor;
                 break;
             case PipeType.Straight:
                 img.sprite = straightSprite;
+                img.color = tile.isConnected ? connectedColor : normalColor;
                 break;
             case PipeType.Corner:
                 img.sprite = cornerSprite;
+                img.color = tile.isConnected ? connectedColor : normalColor;
                 break;
             case PipeType.TShape:
                 img.sprite = tShapeSprite;
+                img.color = tile.isConnected ? connectedColor : normalColor;
                 break;
             case PipeType.Cross:
                 img.sprite = crossSprite;
+                img.color = tile.isConnected ? connectedColor : normalColor;
                 break;
             case PipeType.Start:
                 img.sprite = startSprite;
@@ -536,29 +490,11 @@ public class PipePuzzleManager : MonoBehaviour
                 img.color = endColor;
                 break;
         }
-
-        // È¸Àü Àû¿ë (Start¿Í End°¡ ¾Æ´Ñ °æ¿ì¸¸)
-        if (tile.type != PipeType.Start && tile.type != PipeType.End && tile.type != PipeType.Empty)
-        {
-            // ¾Ö´Ï¸ŞÀÌ¼Ç ÁßÀÌ ¾Æ´Ò ¶§¸¸ Á÷Á¢ È¸Àü ¼³Á¤
-            if (!IsAnimating(tile.tileObject))
-            {
-                tile.tileObject.transform.rotation = Quaternion.Euler(0, 0, tile.rotation);
-            }
-            img.color = tile.isConnected ? connectedColor : normalColor;
-        }
     }
 
-    // ¾Ö´Ï¸ŞÀÌ¼Ç ÁßÀÎÁö È®ÀÎÇÏ´Â ÇïÆÛ ¸Ş¼­µå
-    private bool IsAnimating(GameObject tileObject)
-    {
-        // ÅÂ±×³ª ÄÄÆ÷³ÍÆ®·Î ¾Ö´Ï¸ŞÀÌ¼Ç »óÅÂ¸¦ Ã¼Å©
-        // °£´ÜÇÑ ¹æ¹ı: ¸ğµç ÄÚ·çÆ¾ÀÌ ³¡³µ´ÂÁö È®ÀÎ
-        return false; // ½ÇÁ¦·Î´Â ¾Ö´Ï¸ŞÀÌ¼Ç »óÅÂ¸¦ ÃßÀûÇØ¾ß ÇÔ
-    }
     void CheckSolution()
     {
-        // ¸ğµç Å¸ÀÏÀÇ ¿¬°á »óÅÂ ÃÊ±âÈ­
+        // ëª¨ë“  íƒ€ì¼ì˜ ì—°ê²° ìƒíƒœ ì´ˆê¸°í™”
         for (int y = 0; y < gridHeight; y++)
         {
             for (int x = 0; x < gridWidth; x++)
@@ -567,13 +503,14 @@ public class PipePuzzleManager : MonoBehaviour
             }
         }
 
-        // BFS·Î °æ·Î Ã£±â
+        // BFSë¡œ ê²½ë¡œ ì°¾ê¸°
         Queue<Vector2Int> queue = new Queue<Vector2Int>();
         HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+        List<Vector2Int> connectedPath = new List<Vector2Int>();
 
         queue.Enqueue(startPos);
         visited.Add(startPos);
-        grid[startPos.y, startPos.x].isConnected = true;
+        connectedPath.Add(startPos);
 
         bool foundPath = false;
 
@@ -581,60 +518,70 @@ public class PipePuzzleManager : MonoBehaviour
         {
             Vector2Int current = queue.Dequeue();
 
-            // ³¡Á¡¿¡ µµ´ŞÇß´ÂÁö È®ÀÎ
             if (current == endPos)
             {
                 foundPath = true;
-                // °è¼Ó ÁøÇàÇÏ¿© ¸ğµç ¿¬°áµÈ ÆÄÀÌÇÁ¸¦ Ç¥½Ã
             }
 
-            // 4¹æÇâ Ã¼Å© (»ó, ¿ì, ÇÏ, ÁÂ)
             Vector2Int[] directions = {
-            Vector2Int.up,    // »ó (0)
-            Vector2Int.right, // ¿ì (1)
-            Vector2Int.down,  // ÇÏ (2)
-            Vector2Int.left   // ÁÂ (3)
-        };
+                Vector2Int.up,    // ìƒ (0)
+                Vector2Int.right, // ìš° (1)
+                Vector2Int.down,  // í•˜ (2)
+                Vector2Int.left   // ì¢Œ (3)
+            };
 
             for (int i = 0; i < 4; i++)
             {
                 Vector2Int next = current + directions[i];
 
-                // ¹üÀ§ Ã¼Å©
                 if (next.x < 0 || next.x >= gridWidth || next.y < 0 || next.y >= gridHeight)
                     continue;
 
-                // ÀÌ¹Ì ¹æ¹®Çß°Å³ª ºó Å¸ÀÏÀÌ¸é ½ºÅµ
                 if (visited.Contains(next) || grid[next.y, next.x].type == PipeType.Empty)
                     continue;
 
-                // ¿¬°á °¡´ÉÇÑÁö Ã¼Å© (¾ç¹æÇâ ¿¬°á È®ÀÎ)
                 if (CanConnect(current, next, i))
                 {
                     visited.Add(next);
                     queue.Enqueue(next);
-                    grid[next.y, next.x].isConnected = true;
+                    connectedPath.Add(next);
                 }
             }
         }
 
-        // ¸ğµç Å¸ÀÏ ½Ã°¢Àû ¾÷µ¥ÀÌÆ®
-        for (int y = 0; y < gridHeight; y++)
+        // ê²Œì„ í´ë¦¬ì–´ ì‹œì—ë§Œ ì—°ê²°ëœ íƒ€ì¼ë“¤ì˜ ìƒ‰ìƒ ë³€ê²½
+        if (foundPath && visited.Contains(endPos))
         {
-            for (int x = 0; x < gridWidth; x++)
+            // ì—°ê²°ëœ ê²½ë¡œì˜ íƒ€ì¼ë“¤ë§Œ isConnected = true
+            foreach (var pos in connectedPath)
             {
-                UpdateTileVisual(new Vector2Int(x, y));
+                grid[pos.y, pos.x].isConnected = true;
+            }
+
+            // ëª¨ë“  íƒ€ì¼ ì‹œê°ì  ì—…ë°ì´íŠ¸
+            for (int y = 0; y < gridHeight; y++)
+            {
+                for (int x = 0; x < gridWidth; x++)
+                {
+                    UpdateTileVisual(new Vector2Int(x, y));
+                }
+            }
+
+            OnLevelComplete();
+        }
+        else
+        {
+            // í´ë¦¬ì–´í•˜ì§€ ëª»í•œ ê²½ìš° ëª¨ë“  íƒ€ì¼ì„ ê¸°ë³¸ ìƒ‰ìƒìœ¼ë¡œ
+            for (int y = 0; y < gridHeight; y++)
+            {
+                for (int x = 0; x < gridWidth; x++)
+                {
+                    UpdateTileVisual(new Vector2Int(x, y));
+                }
             }
         }
 
-        // µğ¹ö±× ·Î±×
-        Debug.Log($"°æ·Î Å½»ö ¿Ï·á - ½ÃÀÛÁ¡: {startPos}, ³¡Á¡: {endPos}, ¿¬°áµÊ: {foundPath}");
-        Debug.Log($"¹æ¹®ÇÑ Å¸ÀÏ ¼ö: {visited.Count}");
-
-        if (foundPath)
-        {
-            OnLevelComplete();
-        }
+        Debug.Log($"ê²½ë¡œ íƒìƒ‰ ì™„ë£Œ - ì—°ê²°ë¨: {foundPath}, ë°©ë¬¸: {visited.Count}");
     }
 
     bool CanConnect(Vector2Int from, Vector2Int to, int direction)
@@ -642,175 +589,46 @@ public class PipePuzzleManager : MonoBehaviour
         PipeTile fromTile = grid[from.y, from.x];
         PipeTile toTile = grid[to.y, to.x];
 
-        // ¸ÕÀú ¿¬°á ¹è¿­ÀÌ ÃÊ±âÈ­µÇ¾ú´ÂÁö È®ÀÎ
-        if (fromTile.connections == null || toTile.connections == null)
+        // ì—°ê²° ë°°ì—´ í™•ì¸
+        if (fromTile.connections == null || toTile.connections == null ||
+            fromTile.connections.Length != 4 || toTile.connections.Length != 4)
         {
-            Debug.LogError($"¿¬°á ¹è¿­ÀÌ nullÀÔ´Ï´Ù! from: {from}, to: {to}");
+            Debug.LogError($"ì—°ê²° ë°°ì—´ ë¬¸ì œ: from({from}), to({to})");
             return false;
         }
 
-        // ¿¬°á ¹è¿­ÀÌ ¿Ã¹Ù¸¥ Å©±âÀÎÁö È®ÀÎ
-        if (fromTile.connections.Length != 4 || toTile.connections.Length != 4)
-        {
-            Debug.LogError($"¿¬°á ¹è¿­ Å©±â°¡ Àß¸øµÇ¾ú½À´Ï´Ù! from: {fromTile.connections.Length}, to: {toTile.connections.Length}");
-            return false;
-        }
-
-        // direction ¹üÀ§ È®ÀÎ
-        if (direction < 0 || direction >= 4)
-        {
-            Debug.LogError($"Àß¸øµÈ ¹æÇâ: {direction}");
-            return false;
-        }
-
-        // from Å¸ÀÏ¿¡¼­ direction ¹æÇâÀ¸·Î ³ª°¥ ¼ö ÀÖ´ÂÁö È®ÀÎ
+        // from íƒ€ì¼ì—ì„œ direction ë°©í–¥ìœ¼ë¡œ ë‚˜ê°ˆ ìˆ˜ ìˆëŠ”ì§€
         bool canExitFrom = fromTile.connections[direction];
 
-        // to Å¸ÀÏ¿¡¼­ ¹İ´ë ¹æÇâÀ¸·Î µé¾î¿Ã ¼ö ÀÖ´ÂÁö È®ÀÎ
+        // to íƒ€ì¼ì—ì„œ ë°˜ëŒ€ ë°©í–¥ìœ¼ë¡œ ë“¤ì–´ì˜¬ ìˆ˜ ìˆëŠ”ì§€
         int oppositeDir = (direction + 2) % 4;
         bool canEnterTo = toTile.connections[oppositeDir];
 
-        // µğ¹ö±× Á¤º¸ (ÇÊ¿ä½Ã È°¼ºÈ­)
-        /*
+        // ë””ë²„ê·¸ ë¡œê·¸ ì¶”ê°€
         if (canExitFrom && canEnterTo)
         {
-            Debug.Log($"¿¬°á ¼º°ø: {from} -> {to}, ¹æÇâ: {direction}");
-            Debug.Log($"  From tile ({fromTile.type}, rot: {fromTile.rotation}): {string.Join(",", fromTile.connections)}");
-            Debug.Log($"  To tile ({toTile.type}, rot: {toTile.rotation}): {string.Join(",", toTile.connections)}");
+            Debug.Log($"âœ“ ì—°ê²°: [{fromTile.type}]({from.x},{from.y}) â†’ [{toTile.type}]({to.x},{to.y}) | ë°©í–¥:{direction}");
         }
-        */
 
         return canExitFrom && canEnterTo;
-    }
-
-    // PipeTileÀÇ UpdateConnections ¸Ş¼­µåµµ ¼öÁ¤ÀÌ ÇÊ¿äÇÕ´Ï´Ù
-    public void UpdatePipeTileConnections(PipeTile tile)
-    {
-        // ¿¬°á ¹è¿­ ÃÊ±âÈ­
-        if (tile.connections == null || tile.connections.Length != 4)
-        {
-            tile.connections = new bool[4];
-        }
-
-        // ¸ğµç ¿¬°á ÃÊ±âÈ­
-        for (int i = 0; i < 4; i++)
-            tile.connections[i] = false;
-
-        // Å¸ÀÔº° ±âº» ¿¬°á ¼³Á¤ (È¸Àü 0µµ ±âÁØ)
-        switch (tile.type)
-        {
-            case PipeType.Empty:
-                // ¿¬°á ¾øÀ½
-                break;
-
-            case PipeType.Straight:
-                // ±âº»: ÁÂ-¿ì ¿¬°á
-                if (tile.rotation % 180 == 0)
-                {
-                    // 0µµ ¶Ç´Â 180µµ: ÁÂ-¿ì ¿¬°á
-                    tile.connections[1] = true; // ¿ì
-                    tile.connections[3] = true; // ÁÂ
-                }
-                else
-                {
-                    // 90µµ ¶Ç´Â 270µµ: »ó-ÇÏ ¿¬°á
-                    tile.connections[0] = true; // »ó
-                    tile.connections[2] = true; // ÇÏ
-                }
-                break;
-
-            case PipeType.Corner:
-                // È¸Àü¿¡ µû¸¥ ¿¬°á ¼³Á¤
-                switch (tile.rotation)
-                {
-                    case 0:   // ¦¦ ¸ğ¾ç (»ó-¿ì)
-                        tile.connections[0] = true; // »ó
-                        tile.connections[1] = true; // ¿ì
-                        break;
-                    case 90:  // ¦£ ¸ğ¾ç (¿ì-ÇÏ)
-                        tile.connections[1] = true; // ¿ì
-                        tile.connections[2] = true; // ÇÏ
-                        break;
-                    case 180: // ¦¤ ¸ğ¾ç (ÇÏ-ÁÂ)
-                        tile.connections[2] = true; // ÇÏ
-                        tile.connections[3] = true; // ÁÂ
-                        break;
-                    case 270: // ¦¥ ¸ğ¾ç (ÁÂ-»ó)
-                        tile.connections[3] = true; // ÁÂ
-                        tile.connections[0] = true; // »ó
-                        break;
-                }
-                break;
-
-            case PipeType.TShape:
-                // TÀÚ ¿¬°á (3¹æÇâ)
-                switch (tile.rotation)
-                {
-                    case 0:   // ¦ª ¸ğ¾ç (»ó-ÁÂ-¿ì)
-                        tile.connections[0] = true; // »ó
-                        tile.connections[1] = true; // ¿ì
-                        tile.connections[3] = true; // ÁÂ
-                        break;
-                    case 90:  // ¦§ ¸ğ¾ç (»ó-¿ì-ÇÏ)
-                        tile.connections[0] = true; // »ó
-                        tile.connections[1] = true; // ¿ì
-                        tile.connections[2] = true; // ÇÏ
-                        break;
-                    case 180: // ¦¨ ¸ğ¾ç (ÇÏ-ÁÂ-¿ì)
-                        tile.connections[1] = true; // ¿ì
-                        tile.connections[2] = true; // ÇÏ
-                        tile.connections[3] = true; // ÁÂ
-                        break;
-                    case 270: // ¦© ¸ğ¾ç (»ó-ÇÏ-ÁÂ)
-                        tile.connections[0] = true; // »ó
-                        tile.connections[2] = true; // ÇÏ
-                        tile.connections[3] = true; // ÁÂ
-                        break;
-                }
-                break;
-
-            case PipeType.Cross:
-                // ½ÊÀÚ ¿¬°á (¸ğµç ¹æÇâ)
-                tile.connections[0] = true; // »ó
-                tile.connections[1] = true; // ¿ì
-                tile.connections[2] = true; // ÇÏ
-                tile.connections[3] = true; // ÁÂ
-                break;
-
-            case PipeType.Start:
-                // ½ÃÀÛÁ¡ - ¿ìÃøÀ¸·Î¸¸ ¿¬°á (Ç×»ó ÁÂÃø °¡ÀåÀÚ¸®¿¡ ÀÖÀ½)
-                tile.connections[1] = true; // ¿ì
-                break;
-
-            case PipeType.End:
-                // ³¡Á¡ - ÁÂÃøÀ¸·Î¸¸ ¿¬°á (Ç×»ó ¿ìÃø °¡ÀåÀÚ¸®¿¡ ÀÖÀ½)
-                tile.connections[3] = true; // ÁÂ
-                break;
-        }
-
-        // µğ¹ö±× ·Î±× (ÇÊ¿ä½Ã È°¼ºÈ­)
-        /*
-        Debug.Log($"UpdateConnections - Type: {tile.type}, Rotation: {tile.rotation}, " +
-                  $"Connections: [{string.Join(", ", tile.connections)}]");
-        */
     }
 
     void OnLevelComplete()
     {
         isPlaying = false;
-        ShowMessage($"·¹º§ {currentLevel} ¿Ï·á!\nÀÌµ¿ È½¼ö: {moveCount}\n½Ã°£: {FormatTime(gameTime)}", true);
+        ShowMessage($"ë ˆë²¨ {currentLevel} ì™„ë£Œ!\nì´ë™ íšŸìˆ˜: {moveCount}\nì‹œê°„: {FormatTime(gameTime)}", true);
 
         if (successPanel != null)
         {
             successPanel.SetActive(true);
-            successMessage.text = $"ÃàÇÏÇÕ´Ï´Ù!\n·¹º§ {currentLevel} Å¬¸®¾î!";
+            if (successMessage != null)
+                successMessage.text = $"ì¶•í•˜í•©ë‹ˆë‹¤!\në ˆë²¨ {currentLevel} í´ë¦¬ì–´!";
         }
     }
 
     void ShowMessage(string message, bool isSuccess)
     {
         Debug.Log(message);
-        // ¿©±â¿¡ UI ¸Ş½ÃÁö Ç¥½Ã ·ÎÁ÷ Ãß°¡
     }
 
     void ResetLevel()
@@ -822,7 +640,6 @@ public class PipePuzzleManager : MonoBehaviour
         if (successPanel != null)
             successPanel.SetActive(false);
 
-        // ¸ğµç Å¸ÀÏ ÃÊ±â È¸Àü°ªÀ¸·Î ¸®¼Â
         for (int y = 0; y < gridHeight; y++)
         {
             for (int x = 0; x < gridWidth; x++)
@@ -831,21 +648,19 @@ public class PipePuzzleManager : MonoBehaviour
                     grid[y, x].type != PipeType.Start &&
                     grid[y, x].type != PipeType.End)
                 {
+                    // ëœë¤ íšŒì „
                     int newRotation = Random.Range(0, 4) * 90;
                     grid[y, x].rotation = newRotation;
-
-                    // Áß¿ä: ¿¬°á Á¤º¸ ¾÷µ¥ÀÌÆ®
-                    UpdatePipeTileConnections(grid[y, x]);
-
+                    grid[y, x].UpdateConnections();
                     grid[y, x].isConnected = false;
 
-                    // Áï½Ã È¸Àü Àû¿ë (¾Ö´Ï¸ŞÀÌ¼Ç ¾øÀÌ)
                     grid[y, x].tileObject.transform.rotation = Quaternion.Euler(0, 0, newRotation);
                     UpdateTileVisual(new Vector2Int(x, y));
                 }
             }
         }
 
+        CheckSolution();
         UpdateUI();
     }
 

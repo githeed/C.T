@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[System.Serializable]
 public class PipeTile
 {
     public PipeType type;
@@ -12,7 +11,7 @@ public class PipeTile
     public PipeTile(PipeType _type, int _rotation)
     {
         type = _type;
-        rotation = _rotation;
+        rotation = _rotation % 360; // 정규화
         isConnected = false;
         connections = new bool[4];
         UpdateConnections();
@@ -27,13 +26,10 @@ public class PipeTile
 
     public void UpdateConnections()
     {
-        // 모든 연결 초기화
-        for (int i = 0; i < 4; i++)
-            connections[i] = false;
+        // 연결 배열 초기화
+        connections = new bool[4] { false, false, false, false };
 
-        // 타입별 기본 연결 설정 (회전 0도 기준)
-        bool[] baseConnections = new bool[4];
-
+        // 타입별 기본 연결 설정
         switch (type)
         {
             case PipeType.Empty:
@@ -41,53 +37,102 @@ public class PipeTile
                 break;
 
             case PipeType.Straight:
-                // 수평 연결 (좌-우)
-                baseConnections[1] = true; // 우
-                baseConnections[3] = true; // 좌
+                // 회전값에 따른 연결
+                if (rotation == 0 || rotation == 180)
+                {
+                    // 수평 연결 (좌-우)
+                    connections[1] = true; // 우
+                    connections[3] = true; // 좌
+                }
+                else if (rotation == 90 || rotation == 270)
+                {
+                    // 수직 연결 (상-하)
+                    connections[0] = true; // 상
+                    connections[2] = true; // 하
+                }
                 break;
 
             case PipeType.Corner:
-                // L자 연결 (상-우)
-                baseConnections[0] = true; // 상
-                baseConnections[1] = true; // 우
+                // 회전에 따른 연결 설정
+                if (rotation == 180)
+                {
+                    // └ 모양 (상-우)
+                    connections[0] = true; // 상
+                    connections[1] = true; // 우
+                }
+                else if (rotation == 270)
+                {
+                    // ┌ 모양 (우-하)
+                    connections[1] = true; // 우
+                    connections[2] = true; // 하
+                }
+                else if (rotation == 0)
+                {
+                    // ┐ 모양 (하-좌)
+                    connections[2] = true; // 하
+                    connections[3] = true; // 좌
+                }
+                else if (rotation == 90)
+                {
+                    // ┘ 모양 (좌-상)
+                    connections[3] = true; // 좌
+                    connections[0] = true; // 상
+                }
                 break;
 
             case PipeType.TShape:
-                // T자 연결 (상-우-하)
-                baseConnections[0] = true; // 상
-                baseConnections[1] = true; // 우
-                baseConnections[2] = true; // 하
+                // T자 연결 (3방향)
+                if (rotation == 0)
+                {
+                    // ┴ 모양 (상-우-좌)
+                    connections[0] = true; // 상
+                    connections[1] = true; // 우
+                    connections[3] = true; // 좌
+                }
+                else if (rotation == 90)
+                {
+                    // ├ 모양 (상-우-하)
+                    connections[0] = true; // 상
+                    connections[1] = true; // 우
+                    connections[2] = true; // 하
+                }
+                else if (rotation == 180)
+                {
+                    // ┬ 모양 (하-우-좌)
+                    connections[1] = true; // 우
+                    connections[2] = true; // 하
+                    connections[3] = true; // 좌
+                }
+                else if (rotation == 270)
+                {
+                    // ┤ 모양 (상-하-좌)
+                    connections[0] = true; // 상
+                    connections[2] = true; // 하
+                    connections[3] = true; // 좌
+                }
                 break;
 
             case PipeType.Cross:
                 // 십자 연결 (모든 방향)
-                baseConnections[0] = true; // 상
-                baseConnections[1] = true; // 우
-                baseConnections[2] = true; // 하
-                baseConnections[3] = true; // 좌
+                connections[0] = true; // 상
+                connections[1] = true; // 우
+                connections[2] = true; // 하
+                connections[3] = true; // 좌
                 break;
 
             case PipeType.Start:
                 // 시작점 - 우측으로만 연결
-                baseConnections[1] = true; // 우
+                connections[1] = true; // 우
                 break;
 
             case PipeType.End:
                 // 끝점 - 좌측으로만 연결
-                baseConnections[3] = true; // 좌
+                connections[3] = true; // 좌
                 break;
         }
 
-        // 회전 적용
-        int rotationSteps = rotation / 90;
-        for (int i = 0; i < 4; i++)
-        {
-            if (baseConnections[i])
-            {
-                int rotatedIndex = (i + rotationSteps) % 4;
-                connections[rotatedIndex] = true;
-            }
-        }
+        // 디버그 출력
+        Debug.Log($"[{type}] 회전: {rotation}도, 연결: 상({connections[0]}) 우({connections[1]}) 하({connections[2]}) 좌({connections[3]})");
     }
 }
 
