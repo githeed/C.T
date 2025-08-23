@@ -39,6 +39,8 @@ public class PipePuzzleManager : MonoBehaviour
     public TextMeshProUGUI successMessage;
     public Button nextLevelButton;
     public Button retryButton;
+    public PipeGameInteraction gameInteraction;
+
 
     private PipeTile[,] grid;
     private Vector2Int startPos;
@@ -51,6 +53,11 @@ public class PipePuzzleManager : MonoBehaviour
     private bool isAnimating = false;
 
     void Start()
+    {
+        
+    }
+
+    private void OnEnable()
     {
         if (!ValidateComponents())
         {
@@ -94,6 +101,8 @@ public class PipePuzzleManager : MonoBehaviour
         return isValid;
     }
 
+
+    
     void Update()
     {
         if (isPlaying)
@@ -666,15 +675,18 @@ public class PipePuzzleManager : MonoBehaviour
 
     void NextLevel()
     {
-        currentLevel++;
-        moveCount = 0;
-        gameTime = 0;
-        isPlaying = true;
+        gameInteraction.OnPuzzleComplete();
+        Debug.Log("퍼즐 끝!");
 
-        if (successPanel != null)
-            successPanel.SetActive(false);
+        //currentLevel++;
+        //moveCount = 0;
+        //gameTime = 0;
+        //isPlaying = true;
 
-        GenerateLevel();
+        //if (successPanel != null)
+        //    successPanel.SetActive(false);
+
+        //GenerateLevel();
     }
 
     void ClearGrid()

@@ -62,7 +62,6 @@ public class PipeTileUI : MonoBehaviour, IPointerClickHandler, IPointerEnterHand
             Debug.Log($"타일 클릭: ({gridPosition.x}, {gridPosition.y})");
             manager.RotateTile(gridPosition);
 
-            // 클릭 애니메이션 (LeanTween 없이)
             StartCoroutine(ClickAnimation());
         }
     }
