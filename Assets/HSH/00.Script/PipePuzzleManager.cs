@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
 using TMPro;
+using static PipeTile;
 
 public class PipePuzzleManager : MonoBehaviour
 {
@@ -131,16 +132,9 @@ public class PipePuzzleManager : MonoBehaviour
     {
         ClearGrid();
 
-        // Prefab 체크
-        if (tilePrefab == null)
+        if (tilePrefab == null || gridContainer == null)
         {
-            Debug.LogError("TilePrefab이 할당되지 않았습니다! Inspector에서 할당해주세요.");
-            return;
-        }
-
-        if (gridContainer == null)
-        {
-            Debug.LogError("GridContainer가 할당되지 않았습니다! Inspector에서 할당해주세요.");
+            Debug.LogError("필수 컴포넌트가 없습니다!");
             return;
         }
 
@@ -174,20 +168,17 @@ public class PipePuzzleManager : MonoBehaviour
         {
             for (int x = 0; x < gridWidth; x++)
             {
-                // Prefab 인스턴스 생성
                 GameObject tileObj = Instantiate(tilePrefab, gridContainer);
                 tileObj.name = $"Tile_{x}_{y}";
 
-                // 컴포넌트 확인 및 추가
                 PipeTileUI tileUI = tileObj.GetComponent<PipeTileUI>();
                 if (tileUI == null)
                 {
                     tileUI = tileObj.AddComponent<PipeTileUI>();
-                    Debug.Log($"PipeTileUI 컴포넌트 추가: Tile_{x}_{y}");
                 }
 
                 PipeType pipeType;
-                int rotation = Random.Range(0, 4) * 90;
+                int rotation = 0;
 
                 if (x == startPos.x && y == startPos.y)
                 {
@@ -201,37 +192,29 @@ public class PipePuzzleManager : MonoBehaviour
                 }
                 else if (IsOnSolutionPath(new Vector2Int(x, y)))
                 {
-                    // 솔루션 경로에 있는 타일 - 올바른 파이프 타입과 회전값 설정
                     pipeType = GetPipeTypeForSolution(new Vector2Int(x, y));
-
-                    // 정답 회전값을 먼저 계산
-                    int correctRotation = GetCorrectRotationForSolution(new Vector2Int(x, y));
-
-                    // 퍼즐을 위해 랜덤하게 회전 (나중에 플레이어가 맞춰야 함)
                     rotation = Random.Range(0, 4) * 90;
-
-                    // 디버그용: 정답 회전값 저장 (필요시 사용)
-                    // grid[y, x].correctRotation = correctRotation;
                 }
                 else
                 {
-                    // 솔루션 경로가 아닌 타일
                     float randomValue = Random.Range(0f, 1f);
-
                     if (randomValue < 0.4f)
                     {
-                        // 빈 타일 (40%)
                         pipeType = PipeType.Empty;
+                        rotation = 0;
                     }
                     else
                     {
-                        // 랜덤 파이프 (60%) - 혼란을 주기 위한 더미 파이프
                         pipeType = availablePipes[Random.Range(0, availablePipes.Count)];
+                        rotation = Random.Range(0, 4) * 90;
                     }
                 }
 
                 grid[y, x] = new PipeTile(pipeType, rotation);
                 grid[y, x].tileObject = tileObj;
+
+                // 초기 회전값 설정
+                tileObj.transform.rotation = Quaternion.Euler(0, 0, rotation);
 
                 tileUI.Initialize(this, new Vector2Int(x, y), grid[y, x]);
                 UpdateTileVisual(new Vector2Int(x, y));
@@ -469,33 +452,53 @@ public class PipePuzzleManager : MonoBehaviour
             grid[pos.y, pos.x].type == PipeType.End)
             return;
 
+        // 회전값 업데이트
         grid[pos.y, pos.x].Rotate();
-        UpdateTileVisual(pos);
+
+        // 중요: 연결 정보 업데이트
+        UpdatePipeTileConnections(grid[pos.y, pos.x]);
+
         moveCount++;
         UpdateUI();
 
-        // 회전 애니메이션
-        StartCoroutine(RotateAnimation(grid[pos.y, pos.x].tileObject.transform));
-
-        
+        // 애니메이션 실행
+        StartCoroutine(RotateAnimation(grid[pos.y, pos.x].tileObject.transform, pos));
     }
 
-    IEnumerator RotateAnimation(Transform tile)
+    // 수정된 RotateAnimation
+    IEnumerator RotateAnimation(Transform tile, Vector2Int pos)
     {
         float duration = 0.2f;
         float elapsed = 0;
-        Quaternion startRot = tile.rotation;
-        Quaternion endRot = startRot * Quaternion.Euler(0, 0, -90);
+
+        // 현재 회전값과 목표 회전값
+        float startRotation = tile.eulerAngles.z;
+        float endRotation = grid[pos.y, pos.x].rotation;
+
+        // 최단 경로로 회전하도록 조정
+        float diff = Mathf.DeltaAngle(startRotation, endRotation);
+        endRotation = startRotation + diff;
 
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            tile.rotation = Quaternion.Lerp(startRot, endRot, elapsed / duration);
+            float t = elapsed / duration;
+
+            // Smooth 보간
+            t = t * t * (3f - 2f * t);
+
+            float currentRotation = Mathf.Lerp(startRotation, endRotation, t);
+            tile.rotation = Quaternion.Euler(0, 0, currentRotation);
             yield return null;
         }
 
-        tile.rotation = endRot;
+        // 최종 회전값 설정
+        tile.rotation = Quaternion.Euler(0, 0, grid[pos.y, pos.x].rotation);
 
+        // 시각적 업데이트
+        UpdateTileVisual(pos);
+
+        // 솔루션 체크
         CheckSolution();
     }
 
@@ -534,24 +537,35 @@ public class PipePuzzleManager : MonoBehaviour
                 break;
         }
 
-        // 회전 적용
-        if (tile.type != PipeType.Start && tile.type != PipeType.End)
+        // 회전 적용 (Start와 End가 아닌 경우만)
+        if (tile.type != PipeType.Start && tile.type != PipeType.End && tile.type != PipeType.Empty)
         {
-            tile.tileObject.transform.rotation = Quaternion.Euler(0, 0, -tile.rotation);
+            // 애니메이션 중이 아닐 때만 직접 회전 설정
+            if (!IsAnimating(tile.tileObject))
+            {
+                tile.tileObject.transform.rotation = Quaternion.Euler(0, 0, tile.rotation);
+            }
             img.color = tile.isConnected ? connectedColor : normalColor;
         }
     }
 
+    // 애니메이션 중인지 확인하는 헬퍼 메서드
+    private bool IsAnimating(GameObject tileObject)
+    {
+        // 태그나 컴포넌트로 애니메이션 상태를 체크
+        // 간단한 방법: 모든 코루틴이 끝났는지 확인
+        return false; // 실제로는 애니메이션 상태를 추적해야 함
+    }
     void CheckSolution()
     {
         // 모든 타일의 연결 상태 초기화
-        //for (int y = 0; y < gridHeight; y++)
-        //{
-        //    for (int x = 0; x < gridWidth; x++)
-        //    {
-        //        grid[y, x].isConnected = false;
-        //    }
-        //}
+        for (int y = 0; y < gridHeight; y++)
+        {
+            for (int x = 0; x < gridWidth; x++)
+            {
+                grid[y, x].isConnected = false;
+            }
+        }
 
         // BFS로 경로 찾기
         Queue<Vector2Int> queue = new Queue<Vector2Int>();
@@ -567,18 +581,20 @@ public class PipePuzzleManager : MonoBehaviour
         {
             Vector2Int current = queue.Dequeue();
 
+            // 끝점에 도달했는지 확인
             if (current == endPos)
             {
                 foundPath = true;
+                // 계속 진행하여 모든 연결된 파이프를 표시
             }
 
-            // 4방향 체크
+            // 4방향 체크 (상, 우, 하, 좌)
             Vector2Int[] directions = {
-                new Vector2Int(0, 1),   // 상
-                new Vector2Int(1, 0),   // 우
-                new Vector2Int(0, -1),  // 하
-                new Vector2Int(-1, 0)   // 좌
-            };
+            Vector2Int.up,    // 상 (0)
+            Vector2Int.right, // 우 (1)
+            Vector2Int.down,  // 하 (2)
+            Vector2Int.left   // 좌 (3)
+        };
 
             for (int i = 0; i < 4; i++)
             {
@@ -592,7 +608,7 @@ public class PipePuzzleManager : MonoBehaviour
                 if (visited.Contains(next) || grid[next.y, next.x].type == PipeType.Empty)
                     continue;
 
-                // 연결 가능한지 체크
+                // 연결 가능한지 체크 (양방향 연결 확인)
                 if (CanConnect(current, next, i))
                 {
                     visited.Add(next);
@@ -602,7 +618,7 @@ public class PipePuzzleManager : MonoBehaviour
             }
         }
 
-        // 모든 타일 업데이트
+        // 모든 타일 시각적 업데이트
         for (int y = 0; y < gridHeight; y++)
         {
             for (int x = 0; x < gridWidth; x++)
@@ -611,13 +627,13 @@ public class PipePuzzleManager : MonoBehaviour
             }
         }
 
+        // 디버그 로그
+        Debug.Log($"경로 탐색 완료 - 시작점: {startPos}, 끝점: {endPos}, 연결됨: {foundPath}");
+        Debug.Log($"방문한 타일 수: {visited.Count}");
+
         if (foundPath)
         {
             OnLevelComplete();
-        }
-        else
-        {
-            ShowMessage("경로가 연결되지 않았습니다!", false);
         }
     }
 
@@ -626,13 +642,157 @@ public class PipePuzzleManager : MonoBehaviour
         PipeTile fromTile = grid[from.y, from.x];
         PipeTile toTile = grid[to.y, to.x];
 
-        // from 타일에서 direction 방향으로 나갈 수 있는지
-        if (!fromTile.connections[direction])
+        // 먼저 연결 배열이 초기화되었는지 확인
+        if (fromTile.connections == null || toTile.connections == null)
+        {
+            Debug.LogError($"연결 배열이 null입니다! from: {from}, to: {to}");
             return false;
+        }
 
-        // to 타일에서 반대 방향으로 들어올 수 있는지
+        // 연결 배열이 올바른 크기인지 확인
+        if (fromTile.connections.Length != 4 || toTile.connections.Length != 4)
+        {
+            Debug.LogError($"연결 배열 크기가 잘못되었습니다! from: {fromTile.connections.Length}, to: {toTile.connections.Length}");
+            return false;
+        }
+
+        // direction 범위 확인
+        if (direction < 0 || direction >= 4)
+        {
+            Debug.LogError($"잘못된 방향: {direction}");
+            return false;
+        }
+
+        // from 타일에서 direction 방향으로 나갈 수 있는지 확인
+        bool canExitFrom = fromTile.connections[direction];
+
+        // to 타일에서 반대 방향으로 들어올 수 있는지 확인
         int oppositeDir = (direction + 2) % 4;
-        return toTile.connections[oppositeDir];
+        bool canEnterTo = toTile.connections[oppositeDir];
+
+        // 디버그 정보 (필요시 활성화)
+        /*
+        if (canExitFrom && canEnterTo)
+        {
+            Debug.Log($"연결 성공: {from} -> {to}, 방향: {direction}");
+            Debug.Log($"  From tile ({fromTile.type}, rot: {fromTile.rotation}): {string.Join(",", fromTile.connections)}");
+            Debug.Log($"  To tile ({toTile.type}, rot: {toTile.rotation}): {string.Join(",", toTile.connections)}");
+        }
+        */
+
+        return canExitFrom && canEnterTo;
+    }
+
+    // PipeTile의 UpdateConnections 메서드도 수정이 필요합니다
+    public void UpdatePipeTileConnections(PipeTile tile)
+    {
+        // 연결 배열 초기화
+        if (tile.connections == null || tile.connections.Length != 4)
+        {
+            tile.connections = new bool[4];
+        }
+
+        // 모든 연결 초기화
+        for (int i = 0; i < 4; i++)
+            tile.connections[i] = false;
+
+        // 타입별 기본 연결 설정 (회전 0도 기준)
+        switch (tile.type)
+        {
+            case PipeType.Empty:
+                // 연결 없음
+                break;
+
+            case PipeType.Straight:
+                // 기본: 좌-우 연결
+                if (tile.rotation % 180 == 0)
+                {
+                    // 0도 또는 180도: 좌-우 연결
+                    tile.connections[1] = true; // 우
+                    tile.connections[3] = true; // 좌
+                }
+                else
+                {
+                    // 90도 또는 270도: 상-하 연결
+                    tile.connections[0] = true; // 상
+                    tile.connections[2] = true; // 하
+                }
+                break;
+
+            case PipeType.Corner:
+                // 회전에 따른 연결 설정
+                switch (tile.rotation)
+                {
+                    case 0:   // └ 모양 (상-우)
+                        tile.connections[0] = true; // 상
+                        tile.connections[1] = true; // 우
+                        break;
+                    case 90:  // ┌ 모양 (우-하)
+                        tile.connections[1] = true; // 우
+                        tile.connections[2] = true; // 하
+                        break;
+                    case 180: // ┐ 모양 (하-좌)
+                        tile.connections[2] = true; // 하
+                        tile.connections[3] = true; // 좌
+                        break;
+                    case 270: // ┘ 모양 (좌-상)
+                        tile.connections[3] = true; // 좌
+                        tile.connections[0] = true; // 상
+                        break;
+                }
+                break;
+
+            case PipeType.TShape:
+                // T자 연결 (3방향)
+                switch (tile.rotation)
+                {
+                    case 0:   // ┴ 모양 (상-좌-우)
+                        tile.connections[0] = true; // 상
+                        tile.connections[1] = true; // 우
+                        tile.connections[3] = true; // 좌
+                        break;
+                    case 90:  // ├ 모양 (상-우-하)
+                        tile.connections[0] = true; // 상
+                        tile.connections[1] = true; // 우
+                        tile.connections[2] = true; // 하
+                        break;
+                    case 180: // ┬ 모양 (하-좌-우)
+                        tile.connections[1] = true; // 우
+                        tile.connections[2] = true; // 하
+                        tile.connections[3] = true; // 좌
+                        break;
+                    case 270: // ┤ 모양 (상-하-좌)
+                        tile.connections[0] = true; // 상
+                        tile.connections[2] = true; // 하
+                        tile.connections[3] = true; // 좌
+                        break;
+                }
+                break;
+
+            case PipeType.Cross:
+                // 십자 연결 (모든 방향)
+                tile.connections[0] = true; // 상
+                tile.connections[1] = true; // 우
+                tile.connections[2] = true; // 하
+                tile.connections[3] = true; // 좌
+                break;
+
+            case PipeType.Start:
+                // 시작점 - 우측으로만 연결 (항상 좌측 가장자리에 있음)
+                tile.connections[1] = true; // 우
+                break;
+
+            case PipeType.End:
+                // 끝점 - 좌측으로만 연결 (항상 우측 가장자리에 있음)
+                tile.connections[3] = true; // 좌
+                break;
+        }
+
+        // 디버그 로그 (필요시 활성화)
+        /*
+        Debug.Log($"UpdateConnections - Type: {tile.type}, Rotation: {tile.rotation}, " +
+                  $"Connections: [{string.Join(", ", tile.connections)}]");
+        */
     }
 
     void OnLevelComplete()
@@ -659,6 +819,9 @@ public class PipePuzzleManager : MonoBehaviour
         gameTime = 0;
         isPlaying = true;
 
+        if (successPanel != null)
+            successPanel.SetActive(false);
+
         // 모든 타일 초기 회전값으로 리셋
         for (int y = 0; y < gridHeight; y++)
         {
@@ -668,9 +831,16 @@ public class PipePuzzleManager : MonoBehaviour
                     grid[y, x].type != PipeType.Start &&
                     grid[y, x].type != PipeType.End)
                 {
-                    grid[y, x].rotation = Random.Range(0, 4) * 90;
-                    grid[y, x].UpdateConnections();
+                    int newRotation = Random.Range(0, 4) * 90;
+                    grid[y, x].rotation = newRotation;
+
+                    // 중요: 연결 정보 업데이트
+                    UpdatePipeTileConnections(grid[y, x]);
+
                     grid[y, x].isConnected = false;
+
+                    // 즉시 회전 적용 (애니메이션 없이)
+                    grid[y, x].tileObject.transform.rotation = Quaternion.Euler(0, 0, newRotation);
                     UpdateTileVisual(new Vector2Int(x, y));
                 }
             }
