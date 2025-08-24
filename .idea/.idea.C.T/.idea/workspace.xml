@@ -89,6 +89,10 @@
     &quot;accountId&quot;: &quot;bd673f5a-ee5c-4a4a-a9a3-e05da15d7684&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/KTJ/Scripts/Collector.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/KTJ/Scripts/SandPiece.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -166,6 +170,7 @@
       <workItem from="1755870030977" duration="2475000" />
       <workItem from="1755890699784" duration="57000" />
       <workItem from="1755891201505" duration="982000" />
+      <workItem from="1756022925520" duration="2226000" />
     </task>
     <servers />
   </component>
