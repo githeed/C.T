@@ -1,42 +1,36 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
 public class PipeGameTrigger : MonoBehaviour
 {
     [Header("Visual")]
     public GameObject visualObject;  // 컴퓨터 모니터 등 시각적 오브젝트
-    public Material normalMaterial;
-    public Material highlightMaterial;
 
     private PipeGameInteraction gameInteraction;
     private MeshRenderer meshRenderer;
+    public Outline outline;
 
     void Start()
     {
         // Collider 설정
-        Collider col = GetComponent<Collider>();
+        Collider col = GetComponent<SphereCollider>();
         col.isTrigger = true;
 
-        // PipeGameInteraction 컴포넌트 추가
-        gameInteraction = GetComponent<PipeGameInteraction>();
-        if (gameInteraction == null)
-        {
-            gameInteraction = gameObject.AddComponent<PipeGameInteraction>();
-        }
+        //// Quick Outline 컴포넌트 추가
+        //outline = visualObject.GetComponent<Outline>();
+        //if (outline == null)
+        //    outline = visualObject.AddComponent<Outline>();
 
-        // MeshRenderer 찾기
-        if (visualObject != null)
-        {
-            meshRenderer = visualObject.GetComponent<MeshRenderer>();
-        }
+        outline.OutlineColor = Color.yellow;
+        outline.OutlineWidth = 5f;
+        outline.enabled = false; // 시작할 때는 비활성화
+
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && meshRenderer != null && highlightMaterial != null)
+        if (other.CompareTag("Player"))
         {
-            meshRenderer.material = highlightMaterial;
-            
+            outline.enabled = true;
 
             PipeGameInteraction pi = other.GetComponent<PipeGameInteraction>();
             if(pi)
@@ -52,9 +46,9 @@ public class PipeGameTrigger : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") && meshRenderer != null && normalMaterial != null)
+        if (other.CompareTag("Player"))
         {
-            meshRenderer.material = normalMaterial;
+            outline.enabled = false;
 
             PipeGameInteraction pi = other.GetComponent<PipeGameInteraction>();
             if (pi)

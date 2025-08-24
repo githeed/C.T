@@ -9,6 +9,12 @@ public class H_CamController : MonoBehaviour
     public float distance = 5.0f; // 카메라와 플레이어 사이의 거리
     public float height = 2.0f; // 카메라 높이 오프셋
 
+    [Header("Distance Control")]
+    public float minDistance = 1.0f; // 최소 거리
+    public float maxDistance = 10.0f; // 최대 거리
+    public float distanceStep = 4f; // N키 누를 때마다 줄어드는 거리
+    public float distanceChangeSpeed = 5.0f; // 거리 변경 속도 (부드러운 전환용)
+
     [Header("Mouse Settings")]
     public float mouseSensitivity = 100.0f;
 
@@ -30,10 +36,12 @@ public class H_CamController : MonoBehaviour
     private float currentX = 0.0f; // 수평 회전 (Y축 회전)
     private float currentY = 0.0f; // 수직 회전 (X축 회전)
     private float desiredDistance;
+    private float targetDistance; // 목표 거리 (부드러운 전환용)
 
     // 디버그용 변수
     [Header("Debug Info")]
     [SerializeField] private float currentVerticalAngle; // 현재 수직 각도 표시
+    [SerializeField] private float currentDistance; // 현재 거리 표시
 
     void Start()
     {
@@ -54,11 +62,12 @@ public class H_CamController : MonoBehaviour
         currentY = ClampVerticalAngle(currentY);
 
         desiredDistance = distance;
+        targetDistance = distance;
 
         // 플레이어 자동 찾기 및 타겟 설정
         if (target == null)
         {
-            
+
             H_CharacterMovement player = FindFirstObjectByType<H_CharacterMovement>(FindObjectsInactive.Exclude);
 
             if (player != null)
@@ -87,6 +96,10 @@ public class H_CamController : MonoBehaviour
             minVerticalAngle = maxVerticalAngle;
             maxVerticalAngle = temp;
         }
+
+        // 거리 제한 검증
+        minDistance = Mathf.Max(0.1f, minDistance);
+        maxDistance = Mathf.Max(minDistance + 0.1f, maxDistance);
     }
 
     void LateUpdate()
@@ -95,10 +108,12 @@ public class H_CamController : MonoBehaviour
             return;
 
         HandleMouseInput();
+        UpdateCameraDistance();
         UpdateCameraPosition();
 
-        // 디버그용 현재 각도 업데이트
+        // 디버그용 현재 값 업데이트
         currentVerticalAngle = currentY;
+        currentDistance = desiredDistance;
     }
 
     void HandleMouseInput()
@@ -123,6 +138,12 @@ public class H_CamController : MonoBehaviour
 
         // 수직 각도 제한 적용
         return Mathf.Clamp(angle, minVerticalAngle, maxVerticalAngle);
+    }
+
+    void UpdateCameraDistance()
+    {
+        // 부드러운 거리 전환
+        desiredDistance = Mathf.Lerp(desiredDistance, targetDistance, distanceChangeSpeed * Time.deltaTime);
     }
 
     void UpdateCameraPosition()
@@ -179,13 +200,36 @@ public class H_CamController : MonoBehaviour
 
     public void SetDistance(float newDistance)
     {
-        distance = newDistance;
-        desiredDistance = newDistance;
+        distance = Mathf.Clamp(newDistance, minDistance, maxDistance);
+        targetDistance = distance;
+        desiredDistance = distance;
     }
 
     public void SetSensitivity(float newSensitivity)
     {
         mouseSensitivity = newSensitivity;
+    }
+
+    // 거리를 줄이는 메서드
+    public void DecreaseDistance()
+    {
+        targetDistance = Mathf.Max(minDistance, targetDistance - distanceStep);
+        distance = targetDistance;
+    }
+
+    // 거리를 늘리는 메서드
+    public void IncreaseDistance()
+    {
+        targetDistance = Mathf.Min(maxDistance, targetDistance + distanceStep);
+        distance = targetDistance;
+    }
+
+    // 거리를 특정 값으로 설정
+    public void SetDistanceImmediate(float newDistance)
+    {
+        distance = Mathf.Clamp(newDistance, minDistance, maxDistance);
+        targetDistance = distance;
+        desiredDistance = distance;
     }
 
     // 수직 각도 제한 설정
@@ -205,6 +249,12 @@ public class H_CamController : MonoBehaviour
         return currentY;
     }
 
+    // 현재 거리 가져오기
+    public float GetCurrentDistance()
+    {
+        return desiredDistance;
+    }
+
     // 각도 제한 리셋
     public void ResetVerticalLimits()
     {
@@ -212,9 +262,18 @@ public class H_CamController : MonoBehaviour
         maxVerticalAngle = 60f;
     }
 
+    // 거리 리셋
+    public void ResetDistance()
+    {
+        distance = 5.0f;
+        targetDistance = distance;
+        desiredDistance = distance;
+    }
+
     // ESC 키로 커서 잠금/해제
     void Update()
     {
+        // ESC 키 - 커서 잠금/해제
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (Cursor.lockState == CursorLockMode.Locked)
@@ -229,6 +288,28 @@ public class H_CamController : MonoBehaviour
             }
         }
 
+        // N 키 - 카메라를 플레이어에게 가까이
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            DecreaseDistance();
+            Debug.Log($"카메라 거리: {targetDistance:F2}");
+        }
+
+        // M 키 - 카메라를 플레이어에게서 멀리 (추가 기능)
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            IncreaseDistance();
+            Debug.Log($"카메라 거리: {targetDistance:F2}");
+        }
+
+        // 마우스 휠로 거리 조절 (추가 기능)
+        float scrollWheel = Input.GetAxis("Mouse ScrollWheel");
+        if (scrollWheel != 0)
+        {
+            targetDistance = Mathf.Clamp(targetDistance - scrollWheel * distanceStep * 10, minDistance, maxDistance);
+            distance = targetDistance;
+        }
+
         // 디버그용 - 각도 제한 실시간 조정 (개발 중에만 사용)
 #if UNITY_EDITOR
         if (Input.GetKey(KeyCode.LeftShift))
@@ -237,6 +318,11 @@ public class H_CamController : MonoBehaviour
             {
                 ResetVerticalLimits();
                 Debug.Log($"수직 각도 제한 리셋: [{minVerticalAngle}, {maxVerticalAngle}]");
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                ResetDistance();
+                Debug.Log($"거리 리셋: {distance}");
             }
         }
 #endif
@@ -256,12 +342,12 @@ public class H_CamController : MonoBehaviour
 
         // 최대 위쪽 각도
         Gizmos.color = Color.red;
-        Vector3 maxDir = Quaternion.Euler(maxVerticalAngle, currentX, 0) * Vector3.back * distance;
+        Vector3 maxDir = Quaternion.Euler(maxVerticalAngle, currentX, 0) * Vector3.back * desiredDistance;
         Gizmos.DrawLine(targetPos, targetPos + maxDir);
 
         // 최대 아래쪽 각도
         Gizmos.color = Color.blue;
-        Vector3 minDir = Quaternion.Euler(minVerticalAngle, currentX, 0) * Vector3.back * distance;
+        Vector3 minDir = Quaternion.Euler(minVerticalAngle, currentX, 0) * Vector3.back * desiredDistance;
         Gizmos.DrawLine(targetPos, targetPos + minDir);
 
         // 제한 범위 호 그리기
@@ -274,11 +360,17 @@ public class H_CamController : MonoBehaviour
         {
             float t = (float)i / segments;
             float angle = minVerticalAngle + angleRange * t;
-            Vector3 dir = Quaternion.Euler(angle, currentX, 0) * Vector3.back * distance;
+            Vector3 dir = Quaternion.Euler(angle, currentX, 0) * Vector3.back * desiredDistance;
             Vector3 point = targetPos + dir;
             Gizmos.DrawLine(prevPoint, point);
             prevPoint = point;
         }
+
+        // 거리 범위 시각화
+        Gizmos.color = new Color(1, 1, 0, 0.3f);
+        Gizmos.DrawWireSphere(targetPos, minDistance);
+        Gizmos.color = new Color(1, 0.5f, 0, 0.3f);
+        Gizmos.DrawWireSphere(targetPos, maxDistance);
     }
 #endif
 }

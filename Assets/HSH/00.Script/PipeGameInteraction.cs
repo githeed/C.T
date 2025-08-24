@@ -50,9 +50,8 @@ public class PipeGameInteraction : MonoBehaviour
 
     void Update()
     {
-        //isInRange &&
         // 범위 내에 있고 Q키를 누르면
-        if (!isGameActive && Input.GetKeyDown(interactionKey))
+        if (isInRange && !isGameActive && Input.GetKeyDown(interactionKey))
         {
             StartPipeGame();
         }
@@ -62,16 +61,6 @@ public class PipeGameInteraction : MonoBehaviour
         {
             ExitPipeGame();
         }
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        
     }
 
     public void ShowPrompt()
@@ -101,7 +90,7 @@ public class PipeGameInteraction : MonoBehaviour
             pipePuzzleManager.gameObject.SetActive(true);
 
 
-        //HidePrompt();
+        HidePrompt();
 
         // 플레이어 움직임 비활성화
         if (playerController != null)
@@ -137,11 +126,11 @@ public class PipeGameInteraction : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        //// 범위 내에 있으면 프롬프트 다시 표시
-        //if (isInRange)
-        //{
-        //    ShowPrompt();
-        //}
+        // 범위 내에 있으면 프롬프트 다시 표시
+        if (isInRange)
+        {
+            ShowPrompt();
+        }
 
         Debug.Log("파이프 게임 종료!");
     }
@@ -178,10 +167,10 @@ public class PipeGameInteraction : MonoBehaviour
         Invoke("ExitPipeGame", 2f);
     }
 
-    void OnDrawGizmosSelected()
-    {
-        // 상호작용 범위 표시
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, interactionDistance);
-    }
+    //void OnDrawGizmosSelected()
+    //{
+    //    // 상호작용 범위 표시
+    //    Gizmos.color = Color.yellow;
+    //    Gizmos.DrawWireSphere(transform.position, interactionDistance);
+    //}
 }
