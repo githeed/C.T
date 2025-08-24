@@ -5,94 +5,69 @@ public class TapePlacementSystem : MonoBehaviour
 {
     [Header("Tape Settings")]
     [SerializeField] private GameObject tapePrefab; // WarningTape 프리팹
-    [SerializeField] private GameObject placeMarkerPrefab; // 설치 위치 표시용 마커 (옵션)
-    [SerializeField] private float placementDistance = 5f; // 플레이어로부터 설치 거리
-    [SerializeField] private float placementHeight = 1.5f; // 설치 높이
+    [SerializeField] private float tapeEndOffset = 1.5f; // 플레이어 앞 거리
+    [SerializeField] private float tapeHeight = 1f; // 테이프 높이
 
     [Header("Visual Feedback")]
-    [SerializeField] private Color previewColor = new Color(1f, 1f, 0f, 0.5f); // 미리보기 색상
+    [SerializeField] private Color placingTapeColor = new Color(1f, 1f, 0f, 0.7f); // 설치 중 테이프 색상
+    [SerializeField] private Color completedTapeColor = Color.yellow; // 완료된 테이프 색상
     [SerializeField] private Color validPlacementColor = Color.green;
     [SerializeField] private Color invalidPlacementColor = Color.red;
 
     [Header("Audio (Optional)")]
     [SerializeField] private AudioClip placeSound;
     [SerializeField] private AudioClip removeSound;
+    [SerializeField] private AudioClip enterSound;
     private AudioSource audioSource;
 
     // 설치 상태
     private enum PlacementState
     {
-        Idle,           // 대기 상태
-        PlacingEnd      // 끝점 설치 중
+        Idle,           // 대기 중
+        PlacingTape     // 테이프 설치 중 (시작점에서 끝점 찾는 중)
     }
 
     private PlacementState currentState = PlacementState.Idle;
-    private Vector3 startPoint;
-    private Vector3 endPoint;
-    private GameObject currentPreviewMarker;
-    private LineRenderer previewLine;
+    private TapePlacePoint currentStartPoint; // 현재 시작점
+    private TapePlacePoint currentEndPoint; // 현재 끝점
+    private GameObject currentTape; // 현재 설치 중인 테이프
+    private LineRenderer currentTapeRenderer; // 현재 테이프의 LineRenderer
     private List<GameObject> allTapes = new List<GameObject>();
-    private GameObject startMarker;
-    private GameObject endMarker;
 
-    // 카메라 참조
-    private Camera playerCamera;
+    private bool canPlaceStart = false; // StartPoint에서 E키 사용 가능
+    private bool canPlaceEnd = false; // EndPoint에서 E키 사용 가능
 
     void Start()
     {
-        // 카메라 찾기
-        if (Camera.main != null)
-        {
-            playerCamera = Camera.main;
-        }
-        else
-        {
-            // TPSCameraController를 가진 카메라 찾기
-            H_CamController tpsCamera = FindFirstObjectByType<H_CamController>(FindObjectsInactive.Exclude);
-            if (tpsCamera != null)
-            {
-                playerCamera = tpsCamera.GetComponent<Camera>();
-            }
-        }
-
         // 오디오 소스 설정
         audioSource = GetComponent<AudioSource>();
-        if (audioSource == null && (placeSound != null || removeSound != null))
+        if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
-
-        // 미리보기 라인 생성
-        CreatePreviewLine();
-    }
-
-    void CreatePreviewLine()
-    {
-        GameObject previewObj = new GameObject("TapePreview");
-        previewObj.transform.parent = transform;
-        previewLine = previewObj.AddComponent<LineRenderer>();
-
-        // 라인 렌더러 설정
-        previewLine.startWidth = 0.05f;
-        previewLine.endWidth = 0.05f;
-        previewLine.material = new Material(Shader.Find("Sprites/Default"));
-        previewLine.material.color = previewColor;
-        previewLine.enabled = false;
-        previewLine.positionCount = 2;
     }
 
     void Update()
     {
         HandleInput();
-        UpdatePreview();
+        UpdateTapeEndPosition();
     }
 
     void HandleInput()
     {
-        // E키: 테이프 설치
+        // E키 처리
         if (Input.GetKeyDown(KeyCode.E))
         {
-            HandleTapePlacement();
+            if (currentState == PlacementState.Idle && canPlaceStart && currentStartPoint != null)
+            {
+                // StartPoint에서 테이프 설치 시작
+                StartTapePlacement();
+            }
+            else if (currentState == PlacementState.PlacingTape && canPlaceEnd && currentEndPoint != null)
+            {
+                // EndPoint에서 테이프 설치 완료
+                CompleteTapePlacement();
+            }
         }
 
         // R키: 모든 테이프 제거
@@ -102,126 +77,178 @@ public class TapePlacementSystem : MonoBehaviour
         }
 
         // ESC키: 설치 취소
-        if (Input.GetKeyDown(KeyCode.Escape) && currentState != PlacementState.Idle)
+        if (Input.GetKeyDown(KeyCode.Escape) && currentState == PlacementState.PlacingTape)
         {
             CancelPlacement();
         }
     }
 
-    void HandleTapePlacement()
+    void StartTapePlacement()
     {
-        Vector3 placementPos = GetPlacementPosition();
+        currentState = PlacementState.PlacingTape;
 
-        switch (currentState)
-        {
-            case PlacementState.Idle:
-                // 첫 번째 E키: 시작점 즉시 설정하고 끝점 대기 모드로
-                StartPlacement(placementPos);
-                break;
-
-            case PlacementState.PlacingEnd:
-                // 두 번째 E키: 끝점 설정하고 테이프 생성 후 완료
-                CompletePlacement(placementPos);
-                break;
-        }
-    }
-
-    void StartPlacement(Vector3 position)
-    {
-        // 시작점 즉시 확정
-        currentState = PlacementState.PlacingEnd;
-        startPoint = position;
-
-        // 시작점 마커 생성
-        if (placeMarkerPrefab != null)
-        {
-            startMarker = Instantiate(placeMarkerPrefab, startPoint, Quaternion.identity);
-            startMarker.name = "StartMarker";
-        }
-        else
-        {
-            startMarker = CreateDefaultMarker(startPoint, validPlacementColor);
-        }
-
-        // 미리보기 라인 활성화
-        previewLine.enabled = true;
-
-        // 사운드 재생
-        PlaySound(placeSound);
-
-        Debug.Log("테이프 시작점 설정됨");
-    }
-
-    void CompletePlacement(Vector3 position)
-    {
-        endPoint = position;
-
-        // 끝점 마커 생성
-        if (placeMarkerPrefab != null)
-        {
-            endMarker = Instantiate(placeMarkerPrefab, endPoint, Quaternion.identity);
-            endMarker.name = "EndMarker";
-        }
-        else
-        {
-            endMarker = CreateDefaultMarker(endPoint, validPlacementColor);
-        }
-
-        // 테이프 생성
-        CreateTape(startPoint, endPoint);
-
-        // 상태 초기화 (설치 모드 종료)
-        ResetPlacement();
-
-        // 사운드 재생
-        PlaySound(placeSound);
-
-        Debug.Log("테이프 설치 완료!.");
-    }
-
-    void CreateTape(Vector3 start, Vector3 end)
-    {
-        GameObject tapeObj;
-
+        // 테이프 오브젝트 생성
         if (tapePrefab != null)
         {
-            tapeObj = Instantiate(tapePrefab);
+            currentTape = Instantiate(tapePrefab);
         }
         else
         {
-            // 프리팹이 없으면 기본 테이프 생성
-            tapeObj = new GameObject("WarningTape");
-            WarningTape tape = tapeObj.AddComponent<WarningTape>();
+            // 기본 테이프 생성
+            currentTape = new GameObject("WarningTape_Placing");
+            currentTapeRenderer = currentTape.AddComponent<LineRenderer>();
+            currentTapeRenderer.startWidth = 0.1f;
+            currentTapeRenderer.endWidth = 0.1f;
+            currentTapeRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            currentTapeRenderer.material.color = placingTapeColor;
+            currentTapeRenderer.positionCount = 2;
+        }
 
-            // LineRenderer 추가 (WarningTape에 필요)
-            LineRenderer lr = tapeObj.GetComponent<LineRenderer>();
-            if (lr == null)
+        // LineRenderer 가져오기
+        if (currentTapeRenderer == null)
+        {
+            currentTapeRenderer = currentTape.GetComponent<LineRenderer>();
+            if (currentTapeRenderer == null)
             {
-                lr = tapeObj.AddComponent<LineRenderer>();
+                currentTapeRenderer = currentTape.AddComponent<LineRenderer>();
             }
         }
 
-        // WarningTape 컴포넌트 설정
-        WarningTape warningTape = tapeObj.GetComponent<WarningTape>();
+        // 테이프 색상을 설치 중 색상으로 설정
+        if (currentTapeRenderer != null)
+        {
+            currentTapeRenderer.material.color = placingTapeColor;
+        }
+
+        // 시작점 설정
+        Vector3 startPos = currentStartPoint.GetPosition();
+        startPos.y = tapeHeight;
+
+        // 초기 끝점 설정 (플레이어 앞)
+        Vector3 endPos = transform.position + transform.forward * tapeEndOffset;
+        endPos.y = tapeHeight;
+
+        // LineRenderer 위치 설정
+        currentTapeRenderer.SetPosition(0, startPos);
+        currentTapeRenderer.SetPosition(1, endPos);
+
+        // WarningTape 컴포넌트가 있으면 설정
+        WarningTape warningTape = currentTape.GetComponent<WarningTape>();
         if (warningTape != null)
         {
-            warningTape.SetPoints(start, end);
+            warningTape.SetPoints(startPos, endPos);
         }
 
-        // 리스트에 추가
-        allTapes.Add(tapeObj);
+        // 시작점 색상 변경
+        currentStartPoint.SetSelected(true);
 
-        // 마커도 리스트에 추가 (R키로 함께 제거하기 위해)
-        if (startMarker != null)
+        PlaySound(placeSound);
+        Debug.Log($"테이프 설치 시작: {currentStartPoint.name}에서");
+    }
+
+    void UpdateTapeEndPosition()
+    {
+        // 테이프 설치 중일 때만 업데이트
+        if (currentState != PlacementState.PlacingTape || currentTapeRenderer == null) return;
+
+        // 시작점 위치
+        Vector3 startPos = currentStartPoint.GetPosition();
+        startPos.y = tapeHeight;
+
+        // 끝점 위치 계산
+        Vector3 endPos;
+        if (canPlaceEnd && currentEndPoint != null)
         {
-            allTapes.Add(startMarker);
-            startMarker = null;
+            // EndPoint 안에 있으면 EndPoint 위치 사용
+            endPos = currentEndPoint.GetPosition();
+            endPos.y = tapeHeight;
+
+            // 유효한 위치임을 표시
+            currentTapeRenderer.material.color = validPlacementColor;
         }
-        if (endMarker != null)
+        else
         {
-            allTapes.Add(endMarker);
-            endMarker = null;
+            // 플레이어 앞 위치 사용
+            endPos = transform.position + transform.forward * tapeEndOffset;
+            endPos.y = tapeHeight;
+
+            // 설치 중임을 표시
+            currentTapeRenderer.material.color = placingTapeColor;
         }
+
+        // LineRenderer 업데이트
+        currentTapeRenderer.SetPosition(0, startPos);
+        currentTapeRenderer.SetPosition(1, endPos);
+
+        // WarningTape 컴포넌트 업데이트
+        WarningTape warningTape = currentTape?.GetComponent<WarningTape>();
+        if (warningTape != null)
+        {
+            warningTape.SetPoints(startPos, endPos);
+        }
+    }
+
+    void CompleteTapePlacement()
+    {
+        if (currentTape == null || currentEndPoint == null) return;
+
+
+        currentStartPoint = null;
+        canPlaceStart = false;
+
+        Debug.Log($"테이프 설치 완료 시작: currentEndPoint = {currentEndPoint.name}");
+
+        // 테이프 최종 위치 설정
+        Vector3 startPos = currentStartPoint.GetPosition();
+        Vector3 endPos = currentEndPoint.GetPosition();
+        
+
+        // LineRenderer 최종 설정
+        currentTapeRenderer.SetPosition(0, startPos);
+        currentTapeRenderer.SetPosition(1, endPos);
+        currentTapeRenderer.material.color = completedTapeColor;
+
+        // WarningTape 컴포넌트 최종 설정
+        WarningTape warningTape = currentTape.GetComponent<WarningTape>();
+        if (warningTape != null)
+        {
+            warningTape.SetPoints(startPos, endPos);
+        }
+
+        // 테이프 이름 변경
+        currentTape.name = $"WarningTape_{currentStartPoint.name}_to_{currentEndPoint.name}";
+
+        // 완성된 테이프를 리스트에 추가
+        allTapes.Add(currentTape);
+
+        // 시작점 색상 복원
+        currentStartPoint.SetHighlight(true);
+
+        // 상태 초기화
+        currentState = PlacementState.Idle;
+        currentTape = null;
+        currentTapeRenderer = null;
+
+        PlaySound(placeSound);
+        Debug.Log($"테이프 설치 완료: {currentStartPoint.name} → {currentEndPoint.name}");
+    }
+
+    void CancelPlacement()
+    {
+        if (currentTape != null)
+        {
+            Destroy(currentTape);
+            currentTape = null;
+            currentTapeRenderer = null;
+        }
+
+        if (currentStartPoint != null)
+        {
+            currentStartPoint.SetHighlight(true);
+        }
+
+        currentState = PlacementState.Idle;
+        Debug.Log("테이프 설치가 취소되었습니다.");
     }
 
     void RemoveAllTapes()
@@ -232,109 +259,69 @@ public class TapePlacementSystem : MonoBehaviour
             return;
         }
 
-        // 모든 테이프와 마커 제거
         foreach (GameObject tape in allTapes)
         {
-            if (tape != null)
-            {
-                Destroy(tape);
-            }
+            if (tape != null) Destroy(tape);
         }
 
         allTapes.Clear();
 
-        // 현재 설치 중인 것도 취소
-        CancelPlacement();
+        // 현재 설치 중인 테이프도 취소
+        if (currentState == PlacementState.PlacingTape)
+        {
+            CancelPlacement();
+        }
 
-        // 사운드 재생
         PlaySound(removeSound);
-
         Debug.Log("모든 테이프가 제거되었습니다.");
     }
 
-    void CancelPlacement()
-    {
-        // 임시 마커 제거
-        if (startMarker != null && !allTapes.Contains(startMarker))
-        {
-            Destroy(startMarker);
-            startMarker = null;
-        }
-        if (endMarker != null && !allTapes.Contains(endMarker))
-        {
-            Destroy(endMarker);
-            endMarker = null;
-        }
-
-        ResetPlacement();
-        Debug.Log("테이프 설치가 취소되었습니다.");
-    }
-
-    void ResetPlacement()
-    {
-        currentState = PlacementState.Idle;
-        previewLine.enabled = false;
-        startMarker = null;
-        endMarker = null;
-    }
-
-    void UpdatePreview()
+    // TapePlacePoint에서 호출하는 메서드들
+    public void OnEnterStartPoint(TapePlacePoint point)
     {
         if (currentState == PlacementState.Idle)
-            return;
-
-        Vector3 currentPos = GetPlacementPosition();
-
-        // 미리보기 라인 업데이트
-        if (currentState == PlacementState.PlacingEnd && previewLine != null)
         {
-            previewLine.SetPosition(0, startPoint);
-            previewLine.SetPosition(1, currentPos);
+            currentStartPoint = point;
+            canPlaceStart = true;
+            PlaySound(enterSound);
         }
     }
 
-    Vector3 GetPlacementPosition()
+    public void OnExitStartPoint(TapePlacePoint point)
     {
-        Vector3 position = transform.position + transform.forward * placementDistance;
-        position.y = placementHeight;
-
-        // 카메라 레이캐스트로 더 정확한 위치 찾기 (옵션)
-        if (playerCamera != null)
+        if (currentStartPoint == point && currentState == PlacementState.Idle)
         {
-            Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, 50f))
-            {
-                position = hit.point;
-                position.y += 0.1f; // 바닥에서 약간 위로
-            }
+            // Idle 상태일 때만 초기화 (테이프 설치 중에는 유지)
+            currentStartPoint = null;
+            canPlaceStart = false;
         }
-
-        return position;
     }
 
-    GameObject CreateDefaultMarker(Vector3 position, Color color)
+    public void OnEnterEndPoint(TapePlacePoint point)
     {
-        GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        marker.transform.position = position;
-        marker.transform.localScale = Vector3.one * 0.3f;
-
-        Renderer renderer = marker.GetComponent<Renderer>();
-        if (renderer != null)
+        // PlacingTape 상태이고 시작점과 다른 포인트일 때만
+        if (currentState == PlacementState.PlacingTape && point != currentStartPoint)
         {
-            renderer.material = new Material(Shader.Find("Sprites/Default"));
-            renderer.material.color = color;
+            currentEndPoint = point;
+            canPlaceEnd = true;
+            PlaySound(enterSound);
+            Debug.Log($"EndPoint 진입: {point.name}, canPlaceEnd = {canPlaceEnd}");
         }
+    }
 
-        // 콜라이더 제거 (충돌 방지)
-        Collider collider = marker.GetComponent<Collider>();
-        if (collider != null)
+    public void OnExitEndPoint(TapePlacePoint point)
+    {
+        if (currentEndPoint == point)
         {
-            Destroy(collider);
+            currentEndPoint = null;
+            canPlaceEnd = false;
+            Debug.Log($"EndPoint 나감: {point.name}");
         }
+    }
 
-        return marker;
+    public bool IsPlacingTape()
+    {
+        return currentState == PlacementState.PlacingTape;
     }
 
     void PlaySound(AudioClip clip)
@@ -345,33 +332,70 @@ public class TapePlacementSystem : MonoBehaviour
         }
     }
 
-    // 디버그용 GUI
-    void OnGUI()
-    {
-        if (currentState != PlacementState.Idle)
-        {
-            GUI.Label(new Rect(Screen.width / 2 - 100, 50, 200, 30),
-                $"테이프 설치 모드: {currentState}");
-            GUI.Label(new Rect(Screen.width / 2 - 100, 80, 200, 30),
-                "ESC: 취소 | E: 확정");
-        }
+    //// GUI
+    //void OnGUI()
+    //{
+    //    // 상태에 따른 안내 메시지
+    //    if (currentState == PlacementState.Idle)
+    //    {
+    //        if (canPlaceStart && currentStartPoint != null)
+    //        {
+    //            GUI.Label(new Rect(Screen.width / 2 - 150, 30, 300, 30),
+    //                $"<size=14><color=yellow>[E] 테이프 설치 시작 - {currentStartPoint.name}</color></size>");
+    //        }
+    //    }
+    //    else if (currentState == PlacementState.PlacingTape)
+    //    {
+    //        GUI.Label(new Rect(Screen.width / 2 - 150, 30, 300, 30),
+    //            $"<size=14><color=cyan>테이프 설치 중...</color></size>");
 
-        if (allTapes.Count > 0)
-        {
-            GUI.Label(new Rect(10, Screen.height - 30, 200, 30),
-                $"설치된 테이프: {allTapes.Count / 3}개 (R키로 모두 제거)");
-        }
-    }
+    //        if (canPlaceEnd && currentEndPoint != null)
+    //        {
+    //            GUI.Label(new Rect(Screen.width / 2 - 150, 60, 300, 30),
+    //                $"<size=14><color=green>[E] 여기에 설치 - {currentEndPoint.name}</color></size>");
+    //        }
+    //        else
+    //        {
+    //            GUI.Label(new Rect(Screen.width / 2 - 150, 60, 300, 30),
+    //                "<size=12><color=white>EndPoint로 이동하세요</color></size>");
+    //        }
 
-    // 기즈모
-    void OnDrawGizmos()
-    {
-        if (currentState == PlacementState.PlacingEnd)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(startPoint, GetPlacementPosition());
-            Gizmos.DrawWireSphere(startPoint, 0.3f);
-            Gizmos.DrawWireSphere(GetPlacementPosition(), 0.3f);
-        }
-    }
+    //        GUI.Label(new Rect(Screen.width / 2 - 100, 90, 200, 30),
+    //            "[ESC] 취소");
+    //    }
+
+    //    if (allTapes.Count > 0)
+    //    {
+    //        GUI.Label(new Rect(10, Screen.height - 30, 300, 30),
+    //            $"테이프: {allTapes.Count}개 [R] 모두 제거");
+    //    }
+    //}
+
+    //// 기즈모
+    //void OnDrawGizmos()
+    //{
+    //    if (currentState == PlacementState.PlacingTape && currentStartPoint != null)
+    //    {
+    //        // 시작점
+    //        Gizmos.color = Color.green;
+    //        Gizmos.DrawWireSphere(currentStartPoint.GetPosition(), 0.5f);
+
+    //        // 현재 끝점
+    //        Vector3 endPos = transform.position + transform.forward * tapeEndOffset;
+    //        endPos.y = tapeHeight;
+
+    //        if (canPlaceEnd && currentEndPoint != null)
+    //        {
+    //            endPos = currentEndPoint.GetPosition();
+    //            Gizmos.color = Color.blue;
+    //        }
+    //        else
+    //        {
+    //            Gizmos.color = Color.yellow;
+    //        }
+
+    //        Gizmos.DrawWireSphere(endPos, 0.3f);
+    //        Gizmos.DrawLine(currentStartPoint.GetPosition(), endPos);
+    //    }
+    //}
 }

@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPoint: {fileID: 0}
   endPoint: {fileID: 0}
-  tapeWidth: 1
+  tapeWidth: 0.3
   sagAmount: 0.2
   segmentCount: 20
   windStrength: 0.02
