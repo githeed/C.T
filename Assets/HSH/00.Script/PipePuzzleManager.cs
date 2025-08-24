@@ -38,7 +38,6 @@ public class PipePuzzleManager : MonoBehaviour
     public GameObject successPanel;
     public TextMeshProUGUI successMessage;
     public Button nextLevelButton;
-    public Button retryButton;
     public PipeGameInteraction gameInteraction;
 
 
@@ -51,11 +50,6 @@ public class PipePuzzleManager : MonoBehaviour
     private bool isPlaying = true;
     private List<Vector2Int> solutionPath;
     private bool isAnimating = false;
-
-    void Start()
-    {
-        
-    }
 
     private void OnEnable()
     {
@@ -700,7 +694,7 @@ public class PipePuzzleManager : MonoBehaviour
     void UpdateUI()
     {
         if (levelText != null)
-            levelText.text = $"Level: {currentLevel}";
+            levelText.text = "연결해주세요!";
 
         if (movesText != null)
             movesText.text = $"Moves: {moveCount}";

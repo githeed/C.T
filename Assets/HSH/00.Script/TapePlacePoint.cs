@@ -88,9 +88,6 @@ public class TapePlacePoint : MonoBehaviour
                     }
                 }
             }
-
-            // 하이라이트 효과
-            SetHighlight(true);
         }
     }
 
@@ -119,10 +116,6 @@ public class TapePlacePoint : MonoBehaviour
                     ps.OnExitEndPoint(this);
                 }
             }
-
-            // 하이라이트 해제
-            SetHighlight(false);
-
             Debug.Log($"플레이어가 {gameObject.name}에서 나감");
         }
     }
