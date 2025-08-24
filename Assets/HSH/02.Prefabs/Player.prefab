@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 599164162562485658}
   - component: {fileID: 3027993327399481602}
   - component: {fileID: 7529605981002590871}
+  - component: {fileID: 2913990996743241886}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -91,6 +92,28 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2913990996743241886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 917637800529317276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efa88bb4a62742940b873720650dcaa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pipeGameCanvas: {fileID: 0}
+  interactionPrompt: {fileID: 0}
+  promptText: {fileID: 0}
+  pipePuzzleManager: {fileID: 0}
+  playerController: {fileID: 3027993327399481602}
+  interactionDistance: 3
+  interactionKey: 113
+  isInRange: 0
+  isGameActive: 0
+  currentTrigger: {fileID: 0}
 --- !u!1001 &5417021746359789747
 PrefabInstance:
   m_ObjectHideFlags: 0
