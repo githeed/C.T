@@ -18,6 +18,8 @@ public class ShovelUser : MonoBehaviour
     public GameObject handShovel;
     public GameObject digShovel;
     public GameObject mud;
+    public AudioClip shovelSound;
+    public AudioSource shovelAudioSource;
     
     private bool hasShovel = false;
     private bool isShoveling = false;
@@ -32,6 +34,8 @@ public class ShovelUser : MonoBehaviour
         foreach (var p in animator.parameters)
             if (p.type == AnimatorControllerParameterType.Trigger && p.name == shovelTrigger) ok = true;
         if (!ok) Debug.LogWarning($"[ShovelUser] Trigger '{shovelTrigger}' 없음");
+        
+        shovelAudioSource = gameObject.GetComponent<AudioSource>();
     }
 
     public void SetHasShovel(bool v)
@@ -85,5 +89,6 @@ public class ShovelUser : MonoBehaviour
     {
         if (digger) digger.DigOnce();
         mud.SetActive(true);
+        shovelAudioSource.PlayOneShot(shovelSound);
     }
 }
