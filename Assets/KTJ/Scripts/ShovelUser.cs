@@ -17,6 +17,7 @@ public class ShovelUser : MonoBehaviour
     public Behaviour[] movementScriptsToDisable;
     public GameObject handShovel;
     public GameObject digShovel;
+    public GameObject mud;
     
     private bool hasShovel = false;
     private bool isShoveling = false;
@@ -55,18 +56,16 @@ public class ShovelUser : MonoBehaviour
         SetMovementLock(true);
         handShovel.SetActive(false);
         digShovel.SetActive(true);
+        mud.SetActive(false);
     }
 
-    public void DigOnce()
-    {
-        if (digger) digger.DigOnce();
-    }
 
     public void ShovelEnd()
     {
         SetMovementLock(false);
         handShovel.SetActive(true);
         digShovel.SetActive(false);
+        mud.SetActive(false);
     }
 
     void SetMovementLock(bool locked)
@@ -85,5 +84,6 @@ public class ShovelUser : MonoBehaviour
     public void Anim_DigOnce()
     {
         if (digger) digger.DigOnce();
+        mud.SetActive(true);
     }
 }
