@@ -45,9 +45,9 @@ public class H_CamController : MonoBehaviour
 
     void Start()
     {
-        // 커서 잠금
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //// 커서 잠금
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
 
         // 초기 각도 설정
         Vector3 angles = transform.eulerAngles;
@@ -104,6 +104,9 @@ public class H_CamController : MonoBehaviour
 
     void LateUpdate()
     {
+        if (GameManager.Instance.status != GameStatus.Playing) return;
+
+
         if (target == null)
             return;
 

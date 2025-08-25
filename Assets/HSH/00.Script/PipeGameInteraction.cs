@@ -5,7 +5,8 @@ using TMPro;
 public class PipeGameInteraction : MonoBehaviour
 {
     [Header("UI References")]
-    public GameObject pipeGameCanvas;  // 파이프 게임 전체 캔버스
+    public GameObject GamePanel;
+    public GameObject SuccessPanel;
     public GameObject interactionPrompt; // "Q키를 눌러 시작" UI
     public TextMeshProUGUI promptText;
 
@@ -24,8 +25,8 @@ public class PipeGameInteraction : MonoBehaviour
     void Start()
     {
         // 초기 상태 설정
-        if (pipeGameCanvas != null)
-            pipeGameCanvas.SetActive(false);
+        if (GamePanel != null)
+            GamePanel.SetActive(false);
 
         if (interactionPrompt != null)
             interactionPrompt.SetActive(false);
@@ -35,12 +36,7 @@ public class PipeGameInteraction : MonoBehaviour
         {
             playerController = FindFirstObjectByType<H_CharacterMovement>(FindObjectsInactive.Exclude);
         }
-
-        // PipePuzzleManager 자동 찾기
-        if (pipePuzzleManager == null && pipeGameCanvas != null)
-        {
-            pipePuzzleManager = pipeGameCanvas.GetComponentInChildren<PipePuzzleManager>();
-        }
+        
 
         if (promptText != null)
         {
@@ -84,8 +80,8 @@ public class PipeGameInteraction : MonoBehaviour
         isGameActive = true;
 
         // UI 활성화
-        if (pipeGameCanvas != null)
-            pipeGameCanvas.SetActive(true);
+        if (GamePanel != null)
+            GamePanel.SetActive(true);
         if (pipePuzzleManager != null)
             pipePuzzleManager.gameObject.SetActive(true);
 
@@ -110,8 +106,8 @@ public class PipeGameInteraction : MonoBehaviour
         isGameActive = false;
 
         // UI 비활성화
-        if (pipeGameCanvas != null)
-            pipeGameCanvas.SetActive(false);
+        if (GamePanel != null)
+            GamePanel.SetActive(false);
         if (pipePuzzleManager != null)
             pipePuzzleManager.gameObject.SetActive(false);
 
@@ -146,8 +142,10 @@ public class PipeGameInteraction : MonoBehaviour
         isGameActive = false;
 
         // UI 비활성화
-        if (pipeGameCanvas != null)
-            pipeGameCanvas.SetActive(false);
+        if (SuccessPanel != null)
+            SuccessPanel.SetActive(false);
+        if (GamePanel != null)
+            GamePanel.SetActive(false);
         if (pipePuzzleManager != null)
             pipePuzzleManager.gameObject.SetActive(false);
 

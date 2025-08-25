@@ -1,4 +1,13 @@
 using UnityEngine;
+using UnityEngine.UI;
+
+
+public enum GameStatus
+{
+    Ready,
+    Playing,
+    Ending
+}
 
 public class GameManager : MonoBehaviour
 {
@@ -24,7 +33,43 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public GameStatus status;
 
 
+    public GameObject Panel_Start;
+    public GameObject Panel_OS;
+    public GameObject Panel_Guide;
+    public GameObject Panel_Update;
+    public Button btn_Next;
+    public Button btn_FinishTutorial;
 
+
+    private void Start()
+    {
+        status = GameStatus.Ready;
+
+        if (btn_Next != null) btn_Next.onClick.AddListener(NextUI);
+        if (btn_FinishTutorial != null) btn_FinishTutorial.onClick.AddListener(FinishTutorial);
+
+        if (Panel_Start != null) Panel_Start.SetActive(true);
+        if (Panel_OS != null) Panel_OS.SetActive(true);
+    }
+
+    void NextUI()
+    {
+        if(Panel_OS != null) Panel_OS.SetActive(false);
+        if(Panel_Guide != null) Panel_Guide.SetActive(true);
+    }
+    
+    void FinishTutorial()
+    {
+        // 커서 잠금
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        status = GameStatus.Playing;
+
+        if (Panel_Start != null) Panel_Start.SetActive(false);
+        if (Panel_Update != null) Panel_Update.SetActive(true);
+    }
 }
