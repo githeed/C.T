@@ -6,9 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="a31a30bf-f4a6-4c8a-9faa-54d093ee49f0" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.C.T/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.C.T/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Animations/Survival_Build_Shoveling.FBX.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/KTJ/Animations/Survival_Build_Shoveling.FBX.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/HSH/03.Animator/PlayerAnimation.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/HSH/03.Animator/PlayerAnimation.controller" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Animations/Survival_Build_Shoveling.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/KTJ/Animations/Survival_Build_Shoveling.controller" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Animations/Survival_TreeChop_Vertical_Loop.FBX" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Animations/Survival_TreeChop_Vertical_Loop.FBX.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Map/Hangar/Materials/M_metal_fence.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/KTJ/Map/Hangar/Materials/M_metal_fence.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Mesh/brokenTree/Material.001.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/KTJ/Mesh/brokenTree/Material.001.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Mesh/fireaxe.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/KTJ/Mesh/fireaxe.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Scripts/TreeChopZone.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/KTJ/Scripts/TreeChopZone.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scene/Hangar.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scene/Hangar.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Fonts/Maplestory Bold SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Fonts/Maplestory Bold SDF.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +40,7 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/KTJ/Scripts/GetShovel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/KTJ/Scripts/PlayerChopping.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/KTJ/Scripts/ShovelUser.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/KTJ/Scripts/TreeChopZone.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -43,20 +52,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "0822KTJ",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "settings.sync",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Unity 에디터에 연결.Unity 에디터에 연결">
     <configuration name="유닛 테스트(배치 모드)" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.0.40f1\Editor\Unity.exe" />
@@ -113,7 +122,7 @@
       <workItem from="1755890699784" duration="57000" />
       <workItem from="1755891201505" duration="982000" />
       <workItem from="1756022925520" duration="5931000" />
-      <workItem from="1756190399217" duration="6900000" />
+      <workItem from="1756190399217" duration="13277000" />
     </task>
     <servers />
   </component>
