@@ -254,10 +254,12 @@ public class TapePlacementSystem : MonoBehaviour
         Debug.Log($"테이프 설치 완료: {startPointName} → {currentEndPoint.name}");
         isPlacing = false;
 
-
-        GameManager.Instance.status = GameStatus.TreeMission;
-        GameManager.Instance.OnMissionComplete();
-        GameManager.Instance.SetCompleteUI();
+        if(GameManager.Instance.status == GameStatus.TapeMission)
+        {
+            GameManager.Instance.status = GameStatus.TreeMission;
+            GameManager.Instance.OnMissionComplete();
+            GameManager.Instance.SetCompleteUI();
+        }    
 
         GameManager.Instance.cc.camStatus = CamStatus.FPSMode;
 
