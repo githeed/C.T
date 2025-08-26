@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class WarningTriggerCol : MonoBehaviour
 {
-    bool isTriggerd = false;
+    public bool isTriggerd = false;
     public H_CharacterMovement move;
     public float slowWalkSpeed = 1.0f;
     public float slowRunSpeed = 2.0f;
@@ -13,7 +13,7 @@ public class WarningTriggerCol : MonoBehaviour
         {
             if (GameManager.Instance.status == GameStatus.TreeMission)
             {
-                Debug.LogWarning("°É·Áµû!");
+                Debug.LogWarning("ï¿½É·ï¿½ï¿½ï¿½!");
                 isTriggerd = true;
                 GameManager.Instance.SetAlarmText(GameManager.Instance.Panel_Warning);
 

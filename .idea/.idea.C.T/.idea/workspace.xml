@@ -5,7 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a31a30bf-f4a6-4c8a-9faa-54d093ee49f0" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Scripts/TreeMissionClear.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/KTJ/Scripts/TreeMissionClear.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.C.T/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.C.T/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/HSH/00.Script/Triggers/WarningTriggerCol.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/HSH/00.Script/Triggers/WarningTriggerCol.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/IgniteCoders/Simple Water Shader/Resources/Water_mat_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/IgniteCoders/Simple Water Shader/Resources/Water_mat_01.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Scripts/ShovelUser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/KTJ/Scripts/ShovelUser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/VFXs/Whirl/whirlpool.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/KTJ/VFXs/Whirl/whirlpool.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scene/Hangar 2.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scene/Hangar 2.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shaders/Whirlpool/Mat_Whirlpool.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shaders/Whirlpool/Mat_Whirlpool.mat" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
