@@ -236,7 +236,7 @@ public class GameManager : MonoBehaviour
                 }
                 if (TMP_MissionAlarmText != null)
                 {
-                    SetTextUI(TMP_MissionAlarmText, "강이 불어나고 있습니다. 통제선을 설치해 주민들을 보호하십시오 ");
+                    SetTextUI(TMP_MissionAlarmText, "마우스 왼쪽 버튼을 눌러 흙을 퍼내세요!");
                 }
                 else
                 {
@@ -276,7 +276,7 @@ public class GameManager : MonoBehaviour
                     SetAlarmText(Panel_MissionAlarm);
 
                 if (TMP_MissionAlarmText != null)
-                    SetTextUI(TMP_MissionAlarmText, "테이프 미션 알람 텍스트");
+                    SetTextUI(TMP_MissionAlarmText, "통제선을 설치해 사람들이 사람들이 다리를 건너지 않도록 막아야 합니다.");
 
                 if (TMP_MissionNum != null)
                     SetTextUI(TMP_MissionNum, "[MISSION] 02 / 04");
@@ -292,13 +292,13 @@ public class GameManager : MonoBehaviour
                     SetAlarmText(Panel_MissionAlarm);
 
                 if (TMP_MissionAlarmText != null)
-                    SetTextUI(TMP_MissionAlarmText, "나무 미션 알람 텍스트");
+                    SetTextUI(TMP_MissionAlarmText, " 마우스 왼쪽 버튼을 눌러 나무를 베세요!");
 
                 if (TMP_MissionNum != null)
                     SetTextUI(TMP_MissionNum, "[MISSION] 03 / 04");
 
                 if (TMP_MissionText != null)
-                    SetTextUI(TMP_MissionText, "나무나무나무나무나무  ");
+                    SetTextUI(TMP_MissionText, "주민들이 탈출할 수 있도록 도와야 합니다.  ");
                 break;
 
             case GameStatus.PipeMission:
@@ -308,13 +308,13 @@ public class GameManager : MonoBehaviour
                     SetAlarmText(Panel_MissionAlarm);
 
                 if (TMP_MissionAlarmText != null)
-                    SetTextUI(TMP_MissionAlarmText, "파이프 미션 알람 텍스트");
+                    SetTextUI(TMP_MissionAlarmText, "파이프를 연결해 물길을 복구하세요!");
 
                 if (TMP_MissionNum != null)
                     SetTextUI(TMP_MissionNum, "[MISSION] 04 / 04");
 
                 if (TMP_MissionText != null)
-                    SetTextUI(TMP_MissionText, "파이프파이프파이프파이프파이프  ");
+                    SetTextUI(TMP_MissionText, "장치가 작동하려면 물이 흘러야 합니다. ");
                 break;
 
             case GameStatus.Ending:

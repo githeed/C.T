@@ -16,10 +16,20 @@ public class DOTweenTypewriter : MonoBehaviour
         if (textComponent == null)
             textComponent = GetComponent<TextMeshProUGUI>();
 
+        // Rich Text 태그 제거
         fullText = textComponent.text;
+
+        // 특수 문자 확인
+        for (int i = 0; i < fullText.Length; i++)
+        {
+            if (char.IsControl(fullText[i]) && fullText[i] != '\n')
+            {
+                Debug.Log($"Special character at position {i}: {(int)fullText[i]}");
+            }
+        }
+
         textComponent.maxVisibleCharacters = 0;
 
-        // DOTween으로 maxVisibleCharacters 애니메이션
         typingTween = DOTween.To(
             () => textComponent.maxVisibleCharacters,
             x => textComponent.maxVisibleCharacters = x,
