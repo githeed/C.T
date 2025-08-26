@@ -5,69 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a31a30bf-f4a6-4c8a-9faa-54d093ee49f0" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/Hangar.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Hangar.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Hangar/Materials/M_debris.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Hangar/Materials/M_debris.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Hangar/Materials/M_main_road.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Hangar/Materials/M_main_road.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Settings/SampleSceneProfile.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Settings/SampleSceneProfile.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Settings/SampleSceneProfile.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Settings/SampleSceneProfile.asset.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00f_01_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00f_01_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00f_01_01bw.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00f_01_01bw.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00f_01_02.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00f_01_02.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00f_01_03.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00f_01_03.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00m_01_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00m_01_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00m_01_01bw.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00m_01_01bw.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00m_01_02.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00m_01_02.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00m_01_03.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_pants_00m_01_03.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00f_01_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00f_01_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00f_01_01bw.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00f_01_01bw.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00f_01_02.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00f_01_02.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00f_01_02bw.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00f_01_02bw.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00m_01_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00m_01_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00m_01_01bw.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00m_01_01bw.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00m_01_02.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00m_01_02.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00m_01_02bw.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shirtopenrolled_00m_01_02bw.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shoe_01_00_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shoe_01_00_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shoe_01_00_01bw.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shoe_01_00_01bw.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shoe_01_00_02.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shoe_01_00_02.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shoe_01_00_03.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_shoe_01_00_03.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00f_01_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00f_01_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00f_01_01bw.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00f_01_01bw.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00f_01_02.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00f_01_02.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00f_01_02bw.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00f_01_02bw.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00f_01_03.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00f_01_03.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00m_01_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00m_01_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00m_01_01bw.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00m_01_01bw.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00m_01_02.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00m_01_02.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00m_01_02bw.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00m_01_02bw.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00m_01_03.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_csl_tshirt_00m_01_03.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_02.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_02.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_03.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_03.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_04.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_04.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_05.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_05.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_06.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_06.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_07.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_07.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_08.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_08.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_09.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_09.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_10.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_10.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_11.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_11.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_12.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hair_12.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_body_01f_01_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_body_01f_01_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_body_01m_01_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_body_01m_01_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01f_01_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01f_01_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01f_02_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01f_02_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01f_03_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01f_03_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01f_04_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01f_04_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01f_05_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01f_05_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01m_01_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01m_01_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01m_02_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01m_02_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01m_03_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01m_03_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01m_04_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01m_04_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01m_05_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/npc_casual_set_00/Materials/mtl_npc_hmn_face_01m_05_01.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/QualitySettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/QualitySettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.C.T/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.C.T/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,20 +39,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;&lt;알 수 없음&gt;&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "settings.sync",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Unity 에디터에 연결.Unity 에디터에 연결">
     <configuration name="유닛 테스트(배치 모드)" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.0.40f1\Editor\Unity.exe" />
@@ -171,6 +109,7 @@
       <workItem from="1755890699784" duration="57000" />
       <workItem from="1755891201505" duration="982000" />
       <workItem from="1756022925520" duration="5931000" />
+      <workItem from="1756190399217" duration="1009000" />
     </task>
     <servers />
   </component>
