@@ -6,25 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="a31a30bf-f4a6-4c8a-9faa-54d093ee49f0" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.C.T/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.C.T/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/BlackWalnutTree_Bark_BaseMap.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/BlackWalnutTree_Bark_BaseMap.png.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/BlackWalnutTree_Bark_Normal.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/BlackWalnutTree_Bark_Normal.png.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/BlackWalnutTree_Spring_BaseMap.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/BlackWalnutTree_Spring_BaseMap.png.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/BlackWalnutTree_Spring_Normal.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/BlackWalnutTree_Spring_Normal.png.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/BlackwalnutBark.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/BlackwalnutBark.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/BlackwalnutSpring.mat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/BlackwalnutSpring.mat.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Mesh/Survival_TreeChop_Vertical_Loop.FBX" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Mesh/Survival_TreeChop_Vertical_Loop.FBX.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/beautiful-macro-wood-concept.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/beautiful-macro-wood-concept.jpg.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/tree1.fbx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/KTJ/tree1.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/HSH/03.Animator/PlayerAnimation.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/HSH/03.Animator/PlayerAnimation.controller" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Animations/Survival_Build_Shoveling.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/KTJ/Animations/Survival_Build_Shoveling.controller" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Animations/Survival_TreeChop_Vertical_Loop.FBX" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Animations/Survival_TreeChop_Vertical_Loop.FBX.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Map/Hangar/Materials/M_metal_fence.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/KTJ/Map/Hangar/Materials/M_metal_fence.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Mesh/brokenTree/Material.001.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/KTJ/Mesh/brokenTree/Material.001.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Mesh/fireaxe.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/KTJ/Mesh/fireaxe.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/KTJ/Scripts/TreeChopZone.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/KTJ/Scripts/TreeChopZone.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scene/Hangar.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scene/Hangar.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Fonts/Maplestory Bold SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Fonts/Maplestory Bold SDF.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,8 +40,9 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/KTJ/Scripts/GetShovel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/KTJ/Scripts/PlayerChopping.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/KTJ/Scripts/ShovelUser.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/KTJ/Scripts/TreeBreakable.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/KTJ/Scripts/TreeChopZone.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
@@ -63,7 +56,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "0822KTJ",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -129,7 +122,7 @@
       <workItem from="1755890699784" duration="57000" />
       <workItem from="1755891201505" duration="982000" />
       <workItem from="1756022925520" duration="5931000" />
-      <workItem from="1756190399217" duration="2260000" />
+      <workItem from="1756190399217" duration="13277000" />
     </task>
     <servers />
   </component>
