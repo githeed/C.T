@@ -8818,7 +8818,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handShovelrb: {fileID: 276042104}
   handShovelBoxCollider: {fileID: 276042105}
-  terrainDigger: {fileID: 229464808}
+  shovelUser: {fileID: 229464810}
 --- !u!1001 &981242317
 PrefabInstance:
   m_ObjectHideFlags: 0
