@@ -70,6 +70,11 @@ public class H_CharacterMovement : MonoBehaviour
 
     void Update()
     {
+        if(GameManager.Instance.isUIWorking)
+        {
+            animator.SetFloat("Move", 0);
+        }
+
         if (GameManager.Instance.status == GameStatus.Ready || GameManager.Instance.status == GameStatus.Ending || GameManager.Instance.isUIWorking) return;
         HandleGroundCheck();
         HandleMovement();

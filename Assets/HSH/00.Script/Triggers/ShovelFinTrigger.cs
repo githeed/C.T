@@ -12,7 +12,7 @@ public class ShovelFinTrigger : MonoBehaviour
 
             GameManager.Instance.status = GameStatus.TapeMission;
             GameManager.Instance.SetCompleteUI();
+            GameManager.Instance.OnMissionComplete();
         }
     }
-
 }
