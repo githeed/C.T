@@ -250,7 +250,7 @@ public class TapePlacementSystem : MonoBehaviour
         currentStartPoint = null;
         canPlaceStart = false;
 
-        PlaySound(placeSound);
+        StopSound();
         Debug.Log($"테이프 설치 완료: {startPointName} → {currentEndPoint.name}");
         isPlacing = false;
 
@@ -358,5 +358,10 @@ public class TapePlacementSystem : MonoBehaviour
         {
             audioSource.PlayOneShot(clip);
         }
+    }
+
+    public void StopSound()
+    {
+        audioSource.Stop();  // 완전히 중단
     }
 }
