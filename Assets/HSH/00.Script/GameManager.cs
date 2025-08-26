@@ -406,7 +406,11 @@ public class GameManager : MonoBehaviour
         }
 
         isUIWorking = false;
-        UpdateGameState(status);
+        if(status != GameStatus.TreeMission)
+        {
+            UpdateGameState(status);
+        }
+
         alarmCoroutine = null;
     }
 

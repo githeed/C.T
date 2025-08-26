@@ -257,6 +257,7 @@ public class TapePlacementSystem : MonoBehaviour
 
         GameManager.Instance.status = GameStatus.TreeMission;
         GameManager.Instance.OnMissionComplete();
+        GameManager.Instance.SetCompleteUI();
 
         GameManager.Instance.cc.camStatus = CamStatus.FPSMode;
 

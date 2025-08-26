@@ -9,7 +9,7 @@ public class TreeTriggerCol : MonoBehaviour
         {
             Debug.LogWarning("°É·Áµû!");
             isTriggerd = true;
-            GameManager.Instance.SetCompleteUI();
+            GameManager.Instance.UpdateGameState(GameManager.Instance.status);
         }
     }
 }

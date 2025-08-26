@@ -30,6 +30,7 @@ public class H_CharacterMovement : MonoBehaviour
     private float currentSpeed;
     private Vector3 moveDirection;
     private bool isRunning;
+    public bool canRun;
 
     void Start()
     {
@@ -66,6 +67,8 @@ public class H_CharacterMovement : MonoBehaviour
             groundChecker.transform.localPosition = new Vector3(0, -1.0f, 0);
             groundCheck = groundChecker.transform;
         }
+
+        canRun = true;
     }
 
     void Update()
