@@ -9,7 +9,7 @@ public class ShovelFinTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(!isTriggerd)
+        if(!isTriggerd && GameManager.Instance.status == GameStatus.ShovelMission)
         {
             isTriggerd = true;
 

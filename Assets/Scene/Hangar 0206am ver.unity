@@ -5635,6 +5635,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6535111240057721643, guid: 718c18baf30f24d46b5b95f88da780f6, type: 3}
+      propertyPath: endSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: cfe681c396db64c4584fb181fffce73d, type: 3}
+    - target: {fileID: 6535111240057721643, guid: 718c18baf30f24d46b5b95f88da780f6, type: 3}
       propertyPath: gamePanel
       value: 
       objectReference: {fileID: 405332762}
@@ -5658,6 +5662,10 @@ PrefabInstance:
       propertyPath: retryButton
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6535111240057721643, guid: 718c18baf30f24d46b5b95f88da780f6, type: 3}
+      propertyPath: startSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 41598c3f6774bff4491319adb673d73d, type: 3}
     - target: {fileID: 6535111240057721643, guid: 718c18baf30f24d46b5b95f88da780f6, type: 3}
       propertyPath: successPanel
       value: 
@@ -56673,6 +56681,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   move: {fileID: 728810087}
+  slowWalkSpeed: 1
+  slowRunSpeed: 2
 --- !u!4 &1809338034 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1030973086, guid: abc00000000006343380346881349984, type: 3}
