@@ -5,8 +5,8 @@ public class ShovelFinTrigger : MonoBehaviour
     bool isTriggerd = false;
     public Rigidbody handShovelrb;
     public BoxCollider handShovelBoxCollider;
-    public TerrainDigger terrainDigger;
-
+    public ShovelUser shovelUser;
+    
     private void OnTriggerEnter(Collider other)
     {
         if(!isTriggerd && GameManager.Instance.status == GameStatus.ShovelMission)
@@ -17,11 +17,17 @@ public class ShovelFinTrigger : MonoBehaviour
             GameManager.Instance.SetCompleteUI();
             GameManager.Instance.OnMissionComplete();
 
-            terrainDigger.hasShovel = false;
             handShovelBoxCollider.enabled = true;
             handShovelrb.isKinematic = false;
             handShovelrb.useGravity = true;
             handShovelrb.gameObject.transform.SetParent(null);
+            
+            var su = shovelUser ? shovelUser : other.GetComponentInParent<ShovelUser>();
+            if (su)
+            {
+                su.ShovelEnd();
+                su.enabled = false;
+            }
         }
     }
 }

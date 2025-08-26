@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections;
 
@@ -5,6 +6,9 @@ public class TreeMissionClear : MonoBehaviour
 {
     public Rigidbody treePart1;
     public Rigidbody treePart2;
+    public Rigidbody handAxe;
+    public BoxCollider handAxeCol;
+    public PlayerChopping playerChopping;
     
     public float destroyDelay = 3f;
 
@@ -12,13 +16,29 @@ public class TreeMissionClear : MonoBehaviour
 
     private bool waitStarted = false;
 
+    private void Awake()
+    {
+        handAxeCol.enabled = false;
+        handAxe.isKinematic = true;
+        handAxe.useGravity = false;
+    }
+
     void Update()
     {
-        if (treesCleared || waitStarted) return;
+        if (waitStarted) return;
 
         if (IsDropped(treePart1) && IsDropped(treePart2))
         {
             StartCoroutine(ClearAfterDelay());
+        }
+
+        if (treesCleared)
+        {
+            playerChopping.requireAxeEquipped = false;
+            handAxe.gameObject.transform.SetParent(null);
+            handAxe.isKinematic = false;
+            handAxe.useGravity = true;
+            handAxeCol.enabled = true;
         }
     }
 
@@ -42,4 +62,5 @@ public class TreeMissionClear : MonoBehaviour
         treesCleared = true;
 
     }
+    
 }
