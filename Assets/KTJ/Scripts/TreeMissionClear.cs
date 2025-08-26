@@ -34,7 +34,7 @@ public class TreeMissionClear : MonoBehaviour
 
         if (treesCleared)
         {
-            playerChopping.requireAxeEquipped = false;
+            playerChopping.enabled = false;
             handAxe.gameObject.transform.SetParent(null);
             handAxe.isKinematic = false;
             handAxe.useGravity = true;
