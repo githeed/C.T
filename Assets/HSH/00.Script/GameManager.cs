@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System;
 
 public enum GameStatus
 {
@@ -36,6 +37,8 @@ public class GameManager : MonoBehaviour
     }
 
     public GameStatus status;
+    public H_CamController cc;
+    public Transform camPosition;
 
     [Header("Start UI References")]
     public GameObject Panel_Start;
@@ -48,13 +51,23 @@ public class GameManager : MonoBehaviour
     public GameObject Panel_Update;
     public GameObject Panel_MissionAlarm;
     public TextMeshProUGUI TMP_MissionAlarmText;
+    public GameObject Panel_Warning;
     public GameObject Panel_Complete;
     public GameObject Panel_MissionPopUP;
     public TextMeshProUGUI TMP_MissionNum;
     public TextMeshProUGUI TMP_MissionText;
 
+    [Header("Mission System")]
+    [SerializeField] private DirectionalArrowUI arrowUI;
+    [SerializeField] private Transform[] missionLocations; // 미션 위치들
+    [SerializeField] private float completionDistance = 3f; // 도달 판정 거리
+
+    private int currentMissionIndex = 0;
+
     [Header("Bool references")]
     public bool isUIWorking = false;
+
+
 
 
     // 코루틴 추적용
@@ -105,10 +118,46 @@ public class GameManager : MonoBehaviour
         if (Panel_OS != null) Panel_OS.SetActive(true);
         else Debug.LogError("Panel_OS가 할당되지 않았습니다!");
 
+        // 첫 번째 미션 설정
+        if (missionLocations.Length > 0)
+        {
+            StartMission(0);
+        }
+
         // 모든 UI 레퍼런스 체크
         //CheckUIReferences();
     }
 
+    public void StartMission(int index)
+    {
+        if (index < missionLocations.Length)
+        {
+            currentMissionIndex = index;
+            arrowUI.SetTarget(missionLocations[index]);
+            arrowUI.ShowArrow(true);
+
+            Debug.Log($"Mission {index + 1} Started: Go to {missionLocations[index].name}");
+        }
+    }
+
+    public void OnMissionComplete()
+    {
+        Debug.Log($"Mission {currentMissionIndex + 1} Complete!");
+
+        // 다음 미션으로
+        currentMissionIndex++;
+
+        if (currentMissionIndex < missionLocations.Length)
+        {
+            StartMission(currentMissionIndex);
+        }
+        else
+        {
+            // 모든 미션 완료
+            Debug.Log("All Missions Complete!");
+            arrowUI.ShowArrow(false);
+        }
+    }
     //void CheckUIReferences()
     //{
     //    Debug.Log("=== UI Reference Check ===");
@@ -185,7 +234,6 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.LogError("Panel_MissionAlarm이 null입니다!");
                 }
-
                 if (TMP_MissionAlarmText != null)
                 {
                     SetTextUI(TMP_MissionAlarmText, "강이 불어나고 있습니다. 통제선을 설치해 주민들을 보호하십시오 ");
@@ -309,7 +357,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    void SetAlarmText(GameObject obj)
+    public void SetAlarmText(GameObject obj)
     {
         if (obj == null)
         {

@@ -1,7 +1,16 @@
+using System.Collections;
 using UnityEngine;
+
+public enum CamStatus
+{
+    FPSMode,
+    CinematicMode
+}
 
 public class H_CamController : MonoBehaviour
 {
+    public CamStatus camStatus;
+
     [Header("Target Settings")]
     public Transform target; // 플레이어 Transform
 
@@ -45,6 +54,8 @@ public class H_CamController : MonoBehaviour
 
     void Start()
     {
+        camStatus = CamStatus.FPSMode;
+
         //// 커서 잠금
         //Cursor.lockState = CursorLockMode.Locked;
         //Cursor.visible = false;
@@ -108,15 +119,37 @@ public class H_CamController : MonoBehaviour
 
         if (target == null)
             return;
+        UpdateCamMode();
 
-        HandleMouseInput();
-        UpdateCameraDistance();
-        UpdateCameraPosition();
 
         // 디버그용 현재 값 업데이트
         currentVerticalAngle = currentY;
         currentDistance = desiredDistance;
     }
+
+    void UpdateCamMode()
+    {
+        switch(camStatus)
+        {
+            case CamStatus.FPSMode:
+
+                HandleMouseInput();
+                UpdateCameraDistance();
+                UpdateCameraPosition();
+                break;
+
+            case CamStatus.CinematicMode:
+
+                break;
+
+            default:
+                break;
+
+
+        }
+
+
+        }
 
     void HandleMouseInput()
     {

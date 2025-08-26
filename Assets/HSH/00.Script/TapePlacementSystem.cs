@@ -253,8 +253,12 @@ public class TapePlacementSystem : MonoBehaviour
         PlaySound(placeSound);
         Debug.Log($"테이프 설치 완료: {startPointName} → {currentEndPoint.name}");
         isPlacing = false;
-        GameManager.Instance.status = GameStatus.PipeMission;
-        GameManager.Instance.SetCompleteUI();
+
+
+        GameManager.Instance.status = GameStatus.TreeMission;
+        GameManager.Instance.OnMissionComplete();
+
+        GameManager.Instance.cc.camStatus = CamStatus.FPSMode;
 
         anim.SetLayerWeight(upperBodyLayer, 0.1f);
         anim.SetBool("Tape", isPlacing);
