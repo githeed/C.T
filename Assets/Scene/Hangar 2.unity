@@ -1997,9 +1997,9 @@ MonoBehaviour:
   triggerCooldown: 0.4
   movementScriptsToDisable:
   - {fileID: 728810087}
-  handShovel: {fileID: 0}
-  digShovel: {fileID: 0}
-  mud: {fileID: 0}
+  handShovel: {fileID: 276042103}
+  digShovel: {fileID: 276042102}
+  mud: {fileID: 276042101}
   shovelSound: {fileID: 8300000, guid: 3dfe67bfb759a48428e9a049adae1879, type: 3}
   shovelAudioSource: {fileID: 229464804}
 --- !u!114 &229464803
@@ -2141,6 +2141,17 @@ MonoBehaviour:
   axeCollider: {fileID: 2077134359}
   movementScriptsToDisable:
   - {fileID: 728810087}
+--- !u!114 &229464808 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6087775546679999363, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+  m_PrefabInstance: {fileID: 276042098}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229464798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: add586a6f8c263944a51bbc024f0952a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &233427484 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1030972358, guid: abc00000000015147362066371073150, type: 3}
@@ -2474,6 +2485,50 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1280171049644216839, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112384106585365228, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.256
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112384106585365228, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.131
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112384106585365228, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.547
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112384106585365228, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.4018671
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112384106585365228, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.67936134
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112384106585365228, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.47141156
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112384106585365228, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.39337277
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112384106585365228, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 169.913
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112384106585365228, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 68.081
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112384106585365228, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 76.338
+      objectReference: {fileID: 0}
     - target: {fileID: 2913990996743241886, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
       propertyPath: GamePanel
       value: 
@@ -2506,17 +2561,21 @@ PrefabInstance:
       propertyPath: walkSpeed
       value: 2.5
       objectReference: {fileID: 0}
+    - target: {fileID: 3419735555521280649, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4098750630138834750, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17.26
+      value: -41.92
       objectReference: {fileID: 0}
     - target: {fileID: 4098750630138834750, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.036
+      value: 1.519
       objectReference: {fileID: 0}
     - target: {fileID: 4098750630138834750, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 66.1
+      value: 56.83
       objectReference: {fileID: 0}
     - target: {fileID: 4098750630138834750, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2568,6 +2627,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1061219394077134519, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
       insertIndex: -1
       addedObject: {fileID: 229464807}
+    - targetCorrespondingSourceObject: {fileID: 3419735555521280649, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 276042105}
+    - targetCorrespondingSourceObject: {fileID: 3419735555521280649, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 276042104}
   m_SourcePrefab: {fileID: 100100000, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
 --- !u!114 &276042099 stripped
 MonoBehaviour:
@@ -2591,6 +2656,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: beb0200551ec6d4479e4a871df77df9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &276042101 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1000610364200363087, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+  m_PrefabInstance: {fileID: 276042098}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &276042102 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1280171049644216839, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+  m_PrefabInstance: {fileID: 276042098}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &276042103 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3419735555521280649, guid: 0cea1b20f4ca28b47b15d04725903e30, type: 3}
+  m_PrefabInstance: {fileID: 276042098}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &276042104
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276042103}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &276042105
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276042103}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &279732638 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1030972085, guid: abc00000000009891710838717460983, type: 3}
@@ -9053,6 +9181,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c4e6481492769d46b56c3ad343fb8c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  handShovelrb: {fileID: 276042104}
+  handShovelBoxCollider: {fileID: 276042105}
+  terrainDigger: {fileID: 229464808}
 --- !u!1001 &981242317
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -53963,6 +54094,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f550d1f76631ae4db3a682f4c5554a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  move: {fileID: 0}
+  slowWalkSpeed: 1
+  slowRunSpeed: 2
 --- !u!4 &1809338034 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1030973086, guid: abc00000000006343380346881349984, type: 3}
@@ -54370,7 +54504,7 @@ MonoBehaviour:
   outlineTarget: {fileID: 5562281127767341545}
   playerTag: Player
   text: {fileID: 1004121398}
-  shovelInPlayer: {fileID: 0}
+  shovelInPlayer: {fileID: 276042103}
   shovelInMap: {fileID: 5078619588667515740}
   digger: {fileID: 229464803}
   shovelUser: {fileID: 229464802}
