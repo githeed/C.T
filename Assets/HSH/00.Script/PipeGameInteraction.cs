@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class PipeGameInteraction : MonoBehaviour
 {
@@ -21,6 +22,9 @@ public class PipeGameInteraction : MonoBehaviour
     public bool isInRange = false;
     public bool isGameActive = false;
     public GameObject currentTrigger;
+    public Transform EndingPos;
+
+    H_CamController hc;
 
     void Start()
     {
@@ -42,6 +46,9 @@ public class PipeGameInteraction : MonoBehaviour
         {
             promptText.text = $"{interactionKey} 키를 눌러 파이프 퍼즐 시작";
         }
+
+        hc = Camera.main.GetComponent<H_CamController>();
+
     }
 
     void Update()
@@ -156,13 +163,24 @@ public class PipeGameInteraction : MonoBehaviour
             playerController.enabled = true;
         }
 
+        hc.camStatus = CamStatus.CinematicMode;
+        GameManager.Instance.status = GameStatus.Ending;
+        CameraManager.Instance.MoveAndRotate(EndingPos.position, EndingPos.eulerAngles, 5);
         // 마우스 커서 숨기기
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
 
+        StartCoroutine(EndingSequance());
 
         // 잠시 후 자동으로 게임 종료
         Invoke("ExitPipeGame", 2f);
+    }
+
+    IEnumerator EndingSequance()
+    {
+        yield return new WaitForSeconds(5);
+
+        GameManager.Instance.panel_Ending.SetActive(true);
     }
 
     //void OnDrawGizmosSelected()

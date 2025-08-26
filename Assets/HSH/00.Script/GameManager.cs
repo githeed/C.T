@@ -35,6 +35,12 @@ public class GameManager : MonoBehaviour
             return _instance;
         }
     }
+    [Header("Audio Settings")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip bgmClip;
+    [SerializeField] private bool playOnStart = true;
+    [SerializeField] private bool loop = false;
+    [SerializeField][Range(0f, 1f)] private float volume = 0.7f;
 
     public GameStatus status;
     public H_CamController cc;
@@ -56,6 +62,8 @@ public class GameManager : MonoBehaviour
     public GameObject Panel_MissionPopUP;
     public TextMeshProUGUI TMP_MissionNum;
     public TextMeshProUGUI TMP_MissionText;
+    public GameObject panel_Ending;
+    public Button btn_Quit;
 
     [Header("Mission System")]
     [SerializeField] private DirectionalArrowUI arrowUI;
@@ -111,6 +119,8 @@ public class GameManager : MonoBehaviour
             Debug.LogError("btn_FinishTutorial이 할당되지 않았습니다!");
         }
 
+        btn_Quit.onClick.AddListener(QuitGame);
+
         // UI 초기 설정
         if (Panel_Start != null) Panel_Start.SetActive(true);
         else Debug.LogError("Panel_Start가 할당되지 않았습니다!");
@@ -124,10 +134,36 @@ public class GameManager : MonoBehaviour
             StartMission(0);
         }
 
+        // AudioSource 설정
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+
+        // 설정 적용
+        audioSource.clip = bgmClip;
+        audioSource.loop = loop;
+        audioSource.volume = volume;
+
+        // 자동 재생
+        if (playOnStart && bgmClip != null)
+        {
+            audioSource.Play();
+        }
         // 모든 UI 레퍼런스 체크
         //CheckUIReferences();
     }
-
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        // 에디터에서 실행 중일 때
+        UnityEditor.EditorApplication.isPlaying = false;
+#elif UNITY_WEBGL
+            // WebGL 빌드에서는 종료 불가능 (브라우저 탭 닫기로만 가능)
+            Debug.Log("WebGL builds cannot be quit programmatically.");
+#else
+            // 빌드된 게임에서
+            Application.Quit();
+#endif
+    }
     public void StartMission(int index)
     {
         if (index < missionLocations.Length)
