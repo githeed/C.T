@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro; // ← 추가
 
 [RequireComponent(typeof(Collider), typeof(Rigidbody))]
 public class TwoHitChopZone : MonoBehaviour
@@ -14,15 +15,19 @@ public class TwoHitChopZone : MonoBehaviour
     public float minHitInterval = 0.15f;
 
     [Header("히트 연출 (선택)")]
-    public GameObject hitVfxPrefab;      // 파티클/VFX 프리팹
-    public float vfxSurfaceOffset = 0.02f; // 표면에서 살짝 띄우기
-    /*public AudioSource audioSource;      // 선택
-    public AudioClip hitSfx;   */          // 선택
+    public GameObject hitVfxPrefab;
+    public float vfxSurfaceOffset = 0.02f;
+    public AudioSource audioSource;
+    public AudioClip hitSfx;
 
-    int   _hits = 0;
-    bool  _axeInside = false;
+    [Header("UI (선택)")]
+    public TextMeshProUGUI hintText;     // 힌트/안내 TMP 텍스트
+   // 다른 UI 오브젝트가 있다면 여기
+
+    int _hits = 0;
+    bool _axeInside = false;
     float _lastHitTime = -999f;
-    int   _lastAxeRootId = -1;
+    int _lastAxeRootId = -1;
 
     void Reset()
     {
@@ -46,9 +51,9 @@ public class TwoHitChopZone : MonoBehaviour
     {
         if (!other.CompareTag("Axe")) return;
         _axeInside = true;
-        
+
         if (Time.time - _lastHitTime < minHitInterval) return;
-        
+
         int rootId = other.transform.root.GetInstanceID();
         if (rootId == _lastAxeRootId && Time.time - _lastHitTime < 0.5f) return;
 
@@ -73,10 +78,14 @@ public class TwoHitChopZone : MonoBehaviour
         if (!targetPart) return;
         targetPart.isKinematic = false;
         targetPart.useGravity  = true;
+
+        // ▼ 텍스트/UI 숨기기
+        if (hintText)     hintText.gameObject.SetActive(false);
+
         GetComponent<Collider>().enabled = false;
         Debug.Log($"[{name}] DROPPED!");
     }
-    
+
     void SpawnHitFeedback(Collider axeCol)
     {
         var myCol = GetComponent<Collider>();
@@ -98,19 +107,10 @@ public class TwoHitChopZone : MonoBehaviour
         {
             var inst = Instantiate(hitVfxPrefab, pos, Quaternion.LookRotation(normal));
             var ps = inst.GetComponent<ParticleSystem>();
-            if (ps)
-            {
-                var main = ps.main;
-                float killAfter = main.duration + main.startLifetime.constantMax + 0.1f;
-                Destroy(inst, killAfter);
-            }
-            else
-            {
-                Destroy(inst, 1f);
-            }
+            Destroy(inst, ps ? ps.main.duration + ps.main.startLifetime.constantMax + 0.1f : 1f);
         }
 
-        /*if (audioSource && hitSfx)
-            audioSource.PlayOneShot(hitSfx);*/
+        if (audioSource && hitSfx)
+            audioSource.PlayOneShot(hitSfx);
     }
 }
