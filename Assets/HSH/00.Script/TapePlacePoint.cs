@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class TapePlacePoint : MonoBehaviour
 {
-    //[Header("Point Settings")]
     public enum PointType
     {
         StartPoint,
@@ -11,10 +10,6 @@ public class TapePlacePoint : MonoBehaviour
     }
     public PointType pointType = PointType.AnyPoint;
 
-    [Header("Visual Settings")]
-    public Color normalColor = Color.white;
-    public Color highlightColor = Color.yellow;
-    public Color selectedColor = Color.green;
 
     private GameObject player;
     private TapePlacementSystem ps;
@@ -48,8 +43,7 @@ public class TapePlacePoint : MonoBehaviour
             col.isTrigger = true;
         }
 
-        // 초기 색상 설정
-        SetColor(normalColor);
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -63,12 +57,12 @@ public class TapePlacePoint : MonoBehaviour
             if (ps != null)
             {
                 // 이름으로 구분
-                if (pointType == PointType.StartPoint)
+                if (gameObject.name == "StartPoint" || pointType == PointType.StartPoint)
                 {
                     ps.OnEnterStartPoint(this);
                     Debug.Log($"StartPoint 트리거 진입: {gameObject.name}");
                 }
-                else if (pointType == PointType.EndPoint)
+                else if (gameObject.name == "EndPoint" || pointType == PointType.EndPoint)
                 {
                     ps.OnEnterEndPoint(this);
                     Debug.Log($"EndPoint 트리거 진입: {gameObject.name}");
@@ -90,7 +84,6 @@ public class TapePlacePoint : MonoBehaviour
             }
         }
     }
-
     private void OnTriggerExit(Collider other)
     {
         // 플레이어가 나갔는지 확인
@@ -101,11 +94,11 @@ public class TapePlacePoint : MonoBehaviour
             // TapePlacementSystem에서 이 포인트 제거
             if (ps != null)
             {
-                if (pointType == PointType.StartPoint)
+                if (gameObject.name == "StartPoint" || pointType == PointType.StartPoint)
                 {
                     ps.OnExitStartPoint(this);
                 }
-                else if (pointType == PointType.EndPoint)
+                else if (gameObject.name == "EndPoint" || pointType == PointType.EndPoint)
                 {
                     ps.OnExitEndPoint(this);
                 }
@@ -116,33 +109,9 @@ public class TapePlacePoint : MonoBehaviour
                     ps.OnExitEndPoint(this);
                 }
             }
+
             Debug.Log($"플레이어가 {gameObject.name}에서 나감");
         }
-    }
-
-    // 색상 변경 메서드들
-    public void SetHighlight(bool highlight)
-    {
-        if (!isPlayerInside) return;
-        SetColor(highlight ? highlightColor : normalColor);
-    }
-
-    public void SetSelected(bool selected)
-    {
-        SetColor(selected ? selectedColor : highlightColor);
-    }
-
-    public void SetColor(Color color)
-    {
-        if (sphereRenderer != null)
-        {
-            sphereRenderer.material.color = color;
-        }
-    }
-
-    public void ResetColor()
-    {
-        SetColor(normalColor);
     }
 
     public Vector3 GetPosition()
