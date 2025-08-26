@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
 
     void NextUI()
     {
-        Debug.Log("NextUI 호출됨");
+        //Debug.Log("NextUI 호출됨");
 
         if (Panel_OS != null) Panel_OS.SetActive(false);
         if (Panel_Guide != null) Panel_Guide.SetActive(true);
@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviour
 
     void FinishTutorial()
     {
-        Debug.Log("FinishTutorial 호출됨");
+        //Debug.Log("FinishTutorial 호출됨");
 
         // 커서 잠금
         Cursor.lockState = CursorLockMode.Locked;
@@ -151,7 +151,7 @@ public class GameManager : MonoBehaviour
         if (Panel_Update != null)
         {
             Panel_Update.SetActive(true);
-            Debug.Log("Panel_Update 활성화됨");
+            //Debug.Log("Panel_Update 활성화됨");
         }
         else
         {

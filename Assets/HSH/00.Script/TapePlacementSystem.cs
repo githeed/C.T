@@ -14,6 +14,10 @@ public class TapePlacementSystem : MonoBehaviour
     [SerializeField] private Color validPlacementColor = Color.green;
     [SerializeField] private Color invalidPlacementColor = Color.red;
 
+    [Header("Anim")]
+    public Animator anim;
+    public int upperBodyLayer;
+
     [Header("Audio (Optional)")]
     [SerializeField] private AudioClip placeSound;
     [SerializeField] private AudioClip removeSound;
@@ -40,9 +44,14 @@ public class TapePlacementSystem : MonoBehaviour
 
     private bool canPlaceStart = false; // StartPoint에서 E키 사용 가능
     private bool canPlaceEnd = false; // EndPoint에서 E키 사용 가능
+    public bool isPlacing = false;
 
     void Start()
     {
+        // 애니메이터 설정
+        anim = GetComponentInChildren<Animator>();
+        upperBodyLayer = anim.GetLayerIndex("UpperBody");
+        anim.SetLayerWeight(upperBodyLayer, 0.1f);
         // 오디오 소스 설정
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
@@ -55,6 +64,9 @@ public class TapePlacementSystem : MonoBehaviour
     {
         HandleInput();
         UpdateTapeEndPosition();
+        
+            
+
     }
 
     void HandleInput()
@@ -92,7 +104,12 @@ public class TapePlacementSystem : MonoBehaviour
 
     void StartTapePlacement()
     {
+        isPlacing = true;
+
         currentState = PlacementState.PlacingTape;
+
+        anim.SetLayerWeight(upperBodyLayer, 1f);
+        anim.SetBool("Tape", isPlacing);
 
         // 시작점 이름 저장 (나중에 사용하기 위해)
         startPointName = currentStartPoint.name;
@@ -235,10 +252,12 @@ public class TapePlacementSystem : MonoBehaviour
 
         PlaySound(placeSound);
         Debug.Log($"테이프 설치 완료: {startPointName} → {currentEndPoint.name}");
-
+        isPlacing = false;
         GameManager.Instance.status = GameStatus.PipeMission;
         GameManager.Instance.SetCompleteUI();
 
+        anim.SetLayerWeight(upperBodyLayer, 0.1f);
+        anim.SetBool("Tape", isPlacing);
     }
 
     void CancelPlacement()

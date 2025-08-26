@@ -1271,7 +1271,7 @@ MonoBehaviour:
   targetCamera: {fileID: 0}
   useMainCamera: 1
   reverseFace: 0
-  rotationOffset: {x: 0, y: 0, z: 0}
+  rotationOffset: {x: 0, y: 180, z: 0}
 --- !u!1 &166146981
 GameObject:
   m_ObjectHideFlags: 0
@@ -5187,7 +5187,7 @@ MonoBehaviour:
   targetCamera: {fileID: 0}
   useMainCamera: 1
   reverseFace: 0
-  rotationOffset: {x: 0, y: 0, z: 0}
+  rotationOffset: {x: 0, y: 180, z: 0}
 --- !u!4 &586462798 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1030974900, guid: abc00000000014670732948273299964, type: 3}
@@ -56663,7 +56663,7 @@ MonoBehaviour:
   targetCamera: {fileID: 0}
   useMainCamera: 1
   reverseFace: 0
-  rotationOffset: {x: 0, y: 0, z: 0}
+  rotationOffset: {x: 0, y: 180, z: 0}
 --- !u!4 &2071196756 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1030972369, guid: abc00000000011749298449921830277, type: 3}
