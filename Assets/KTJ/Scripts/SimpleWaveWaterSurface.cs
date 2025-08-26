@@ -1,21 +1,5 @@
 using UnityEngine;
 
-/// 씬에 하나 배치해서 '물의 높이/노말/흐름'을 제공
-public abstract class WaterSurfaceBase : MonoBehaviour
-{
-    public abstract float  GetHeight(Vector3 worldPos);
-    public virtual  Vector3 GetNormal(Vector3 worldPos) => Vector3.up;
-    public virtual  Vector3 GetFlow(Vector3 worldPos)   => Vector3.zero;
-}
-
-// 가장 간단한: 평평한 물 (y = waterLevel)
-public class FlatWaterSurface : WaterSurfaceBase
-{
-    public float waterLevel = 0f;
-    public override float GetHeight(Vector3 worldPos) => waterLevel;
-}
-
-// 간단 웨이브(옵션): 가벼운 sine 파랑
 public class SimpleWaveWaterSurface : WaterSurfaceBase
 {
     public float baseLevel = 0f;
@@ -38,7 +22,7 @@ public class SimpleWaveWaterSurface : WaterSurfaceBase
     {
         // 근사 노말: 미세한 기울기 추정
         float eps = 0.2f;
-        float h  = GetHeight(worldPos);
+        float h = GetHeight(worldPos);
         float hx = GetHeight(worldPos + new Vector3(eps, 0, 0));
         float hz = GetHeight(worldPos + new Vector3(0, 0, eps));
         Vector3 n = new Vector3(-(hx - h) / eps, 1f, -(hz - h) / eps).normalized;
