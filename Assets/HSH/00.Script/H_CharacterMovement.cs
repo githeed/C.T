@@ -70,7 +70,7 @@ public class H_CharacterMovement : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.status != GameStatus.Playing) return;
+        if (GameManager.Instance.status == GameStatus.Ready || GameManager.Instance.status == GameStatus.Ending) return;
         HandleGroundCheck();
         HandleMovement();
         UpdateAnimator();

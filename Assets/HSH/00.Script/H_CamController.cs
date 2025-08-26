@@ -104,8 +104,7 @@ public class H_CamController : MonoBehaviour
 
     void LateUpdate()
     {
-        if (GameManager.Instance.status != GameStatus.Playing) return;
-
+        if (GameManager.Instance.status == GameStatus.Ready || GameManager.Instance.status == GameStatus.Ending) return;
 
         if (target == null)
             return;

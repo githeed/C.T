@@ -6,15 +6,15 @@ public enum GameStatus
 {
     Ready,
     Playing,
+    ShovelMission,
+    TapeMission,
     Ending
 }
 
 public class GameManager : MonoBehaviour
 {
-    // 싱글톤 인스턴스
     private static GameManager _instance;
 
-    // 외부에서 접근 가능한 프로퍼티
     public static GameManager Instance
     {
         get
