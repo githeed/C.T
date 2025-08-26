@@ -14,22 +14,23 @@ public class ShovelUser : MonoBehaviour
     public KeyCode useKey = KeyCode.G;
     public float triggerCooldown = 0.4f;
 
-    [Header("Movement Lock")]
+    [Header("Lock & Visuals")]
     public Behaviour[] movementScriptsToDisable;
+    public GameObject handShovel;
+    public GameObject digShovel;
 
-    [Header("Shovel Visuals")]
-    public GameObject handShovel;   // 평소 들고다니는 삽
-    public GameObject digShovel;    // 파기 동작 시 보여줄 삽(애니용)
-
-    [Header("Mud (Prefab flow)")]
-    public GameObject mudPrefab;            // 생성할 흙 프리팹
-    public Transform mudAttachParent;       // 파는 동안 붙일 부모(보통 digShovel의 끝부분 Transform)
-    public Vector3 mudLocalPos;             // 붙였을 때 로컬 위치 보정
-    public Vector3 mudLocalEuler;           // 붙였을 때 로컬 회전 보정
+    [Header("Mud (Prefab & Socket)")]
+    public GameObject mud;                // ← 프리팹으로 사용
+    public Transform mudSocket;           // ← 삽 끝(붙일 위치)
+    public Vector3 mudLocalPos;           // 소켓 기준 위치 보정
+    public Vector3 mudLocalEuler;         // 소켓 기준 회전 보정
     public Vector3 mudLocalScale = Vector3.one;
-    public bool addRbIfMissing = true;      // 프리팹에 RB 없으면 자동 추가
-    public float releaseImpulse = 0f;       // MudOut 시 살짝 튀기고 싶으면 >0 (N·s)
-    public Vector3 extraReleaseDir = Vector3.up * 1.0f;
+    public bool addRbIfMissing = true;
+
+    [Header("Release (날리기)")]
+    public float releaseImpulse = 2.5f;   // MudOut 시 임펄스
+    public Vector3 extraReleaseDir = new Vector3(0f, 1f, 0.2f);
+    public float randomTorque = 1.0f;     // 약간의 회전 임펄스
 
     [Header("Audio")]
     public AudioClip shovelSound;
@@ -39,22 +40,22 @@ public class ShovelUser : MonoBehaviour
     private int shovelStateHash;
     private float nextTriggerTime = 0f;
 
-    private GameObject mudInstance;
+    // runtime mud
+    private GameObject mudInst;
     private Rigidbody  mudRb;
 
     void Awake()
     {
         if (!animator) animator = GetComponent<Animator>();
         shovelStateHash = Animator.StringToHash(shovelStateName);
-        
+
         bool ok = false;
         foreach (var p in animator.parameters)
             if (p.type == AnimatorControllerParameterType.Trigger && p.name == shovelTrigger) { ok = true; break; }
         if (!ok) Debug.LogWarning($"[ShovelUser] Trigger '{shovelTrigger}' 없음");
 
         if (!shovelAudioSource) shovelAudioSource = GetComponent<AudioSource>();
-
-        if (!mudAttachParent && digShovel) mudAttachParent = digShovel.transform;
+        if (!mudSocket && digShovel) mudSocket = digShovel.transform; // 기본값
     }
 
     public void SetHasShovel(bool v)
@@ -75,11 +76,13 @@ public class ShovelUser : MonoBehaviour
         }
     }
 
+    // ===== 애니 이벤트 =====
     public void ShovelBegin()
     {
         SetMovementLock(true);
         if (handShovel) handShovel.SetActive(false);
         if (digShovel)  digShovel.SetActive(true);
+        // mud 생성은 Anim_DigOnce에서
     }
 
     public void ShovelEnd()
@@ -89,63 +92,52 @@ public class ShovelUser : MonoBehaviour
         if (digShovel)  digShovel.SetActive(false);
     }
 
-    void SetMovementLock(bool locked)
-    {
-        if (movementScriptsToDisable == null) return;
-        foreach (var b in movementScriptsToDisable)
-            if (b) b.enabled = !locked;
-    }
-
-    bool CanTrigger()
-    {
-        var s = animator.GetCurrentAnimatorStateInfo(0);
-        return !(s.shortNameHash == shovelStateHash || animator.IsInTransition(0));
-    }
-    
+    // 삽이 흙을 퍼올린 타이밍
     public void Anim_DigOnce()
     {
         if (digger) digger.DigOnce();
         if (shovelAudioSource && shovelSound) shovelAudioSource.PlayOneShot(shovelSound);
 
-        if (mudInstance) { Destroy(mudInstance); mudInstance = null; mudRb = null; }
+        if (!mud) { Debug.LogWarning("[ShovelUser] mud 프리팹이 비어있음"); return; }
 
-        if (!mudPrefab)
+        // 1) 새 프리팹 생성 (이전 mudInst는 파괴/재활용하지 않음)
+        var newMud = Instantiate(mud);
+        newMud.name = mud.name + " (Inst)";
+
+        // 2) 삽 끝에 부착
+        Transform parent = mudSocket ? mudSocket : transform;
+        newMud.transform.SetParent(parent, false);
+        newMud.transform.localPosition = mudLocalPos;
+        newMud.transform.localRotation = Quaternion.Euler(mudLocalEuler);
+        newMud.transform.localScale    = mudLocalScale;
+
+        // 3) 물리 잠금(들고있는 동안)
+        var rb = newMud.GetComponent<Rigidbody>();
+        if (!rb && addRbIfMissing) rb = newMud.AddComponent<Rigidbody>();
+        if (rb)
         {
-            Debug.LogWarning("[ShovelUser] mudPrefab 미할당");
-            return;
+            rb.isKinematic = true;
+            rb.useGravity  = false;
+            rb.linearVelocity = Vector3.zero;          // ← linearVelocity가 아니라 velocity
+            rb.angularVelocity = Vector3.zero;
         }
 
-        mudInstance = Instantiate(mudPrefab);
-        mudInstance.name = mudPrefab.name + " (Inst)";
-
-        Transform parent = mudAttachParent ? mudAttachParent : transform;
-        mudInstance.transform.SetParent(parent, worldPositionStays: false);
-        mudInstance.transform.localPosition = mudLocalPos;
-        mudInstance.transform.localRotation = Quaternion.Euler(mudLocalEuler);
-        mudInstance.transform.localScale    = mudLocalScale;
-
-        mudRb = mudInstance.GetComponent<Rigidbody>();
-        if (!mudRb && addRbIfMissing) mudRb = mudInstance.AddComponent<Rigidbody>();
-        if (mudRb)
-        {
-            mudRb.isKinematic = true;
-            mudRb.useGravity  = false;
-            mudRb.linearVelocity    = Vector3.zero;
-            mudRb.angularVelocity = Vector3.zero;
-        }
+        // 최신 사이클의 mud 포인터 갱신 (이전 것들은 씬에 그대로 둠)
+        mudInst = newMud;
+        mudRb   = rb;
     }
-    
+
+// 흙을 떨어뜨리는 타이밍 (최신 사이클의 mud만 분리/낙하)
     public void MudOut()
     {
-        if (!mudInstance)
-        {
-            Debug.LogWarning("[ShovelUser] MudOut 호출됐지만 mudInstance 없음");
-            return;
-        }
-        mudInstance.transform.SetParent(null, true);
+        if (!mudInst) { Debug.LogWarning("[ShovelUser] MudOut 호출됐지만 mudInst 없음"); return; }
 
-        if (!mudRb) mudRb = mudInstance.GetComponent<Rigidbody>();
-        if (!mudRb && addRbIfMissing) mudRb = mudInstance.AddComponent<Rigidbody>();
+        // 1) 부모 분리(월드 좌표 유지)
+        mudInst.transform.SetParent(null, true);
+
+        // 2) 물리 전환
+        if (!mudRb) mudRb = mudInst.GetComponent<Rigidbody>();
+        if (!mudRb && addRbIfMissing) mudRb = mudInst.AddComponent<Rigidbody>();
         if (mudRb)
         {
             mudRb.isKinematic = false;
@@ -153,9 +145,29 @@ public class ShovelUser : MonoBehaviour
 
             if (releaseImpulse > 0f)
             {
-                Vector3 dir = (mudAttachParent ? mudAttachParent.forward : transform.forward) + extraReleaseDir;
+                Vector3 dir = (mudSocket ? mudSocket.forward : transform.forward) + extraReleaseDir;
                 mudRb.AddForce(dir.normalized * releaseImpulse, ForceMode.Impulse);
+
+                if (randomTorque > 0f)
+                    mudRb.AddTorque(Random.onUnitSphere * randomTorque, ForceMode.Impulse);
             }
         }
+    }
+
+    void SetMovementLock(bool locked)
+    {
+        if (movementScriptsToDisable == null) return;
+        foreach (var b in movementScriptsToDisable)
+        {
+            if (!b) continue;
+            if (b == this || b == animator || b is Animator) continue;
+            b.enabled = !locked;
+        }
+    }
+
+    bool CanTrigger()
+    {
+        var s = animator.GetCurrentAnimatorStateInfo(0);
+        return !(s.shortNameHash == shovelStateHash || animator.IsInTransition(0));
     }
 }
