@@ -312,7 +312,7 @@ public class GameManager : MonoBehaviour
                     SetAlarmText(Panel_MissionAlarm);
 
                 if (TMP_MissionAlarmText != null)
-                    SetTextUI(TMP_MissionAlarmText, "통제선을 설치해 사람들이 사람들이 다리를 건너지 않도록 막아야 합니다.");
+                    SetTextUI(TMP_MissionAlarmText, "통제선을 설치해 다리를 막아야 합니다.");
 
                 if (TMP_MissionNum != null)
                     SetTextUI(TMP_MissionNum, "[MISSION] 02 / 04");
